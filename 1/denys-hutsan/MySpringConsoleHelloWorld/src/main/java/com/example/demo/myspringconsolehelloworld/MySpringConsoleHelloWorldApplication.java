@@ -1,4 +1,4 @@
-package com.example.myspringconsolehelloworld;
+package com.example.demo.myspringconsolehelloworld;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

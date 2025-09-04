@@ -1,18 +1,18 @@
 src/main/java/com/example/
-├── config/                 # Конфігураційні класи (@Configuration)
-├── constants/              # Статичні константи
-├── controllers/            # Контролери (@RestController)
-├── docs/                   # Swagger/OpenAPI специфікації
-├── dto/                    # Data Transfer Objects
-│   ├── request/            # Вхідні DTO
-│   └── response/           # Вихідні DTO
-├── entity/                 # Доменні моделі (@Entity)
-├── repository/             # Репозиторії (@Repository, JpaRepository)
-├── services/               # Сервіси (@Service)
-│   ├── facade/             # Фасад-сервіси (опціонально)
-│   ├── read/               # Сервіси для читання (опціонально)
-│   └── write/              # Сервіси для запису (опціонально)
-├── factories/              # Фабрики (опціонально)
-├── strategies/             # Стратегії (опціонально)
-├── commands/               # Команди для CQRS (опціонально)
-└── Application.java        # Головний клас (@SpringBootApplication)
+├── config/                 # Configuration classes (@Configuration)
+├── constants/              # Static constants
+├── controllers/            # Controllers for handling HTTP requests (@RestController)
+├── docs/                   # Swagger/OpenAPI specifications
+├── dto/                    # Data Transfer Objects (DTOs)
+│   ├── request/            # Input DTOs for request validation
+│   └── response/           # Output DTOs for response serialization
+├── entity/                 # Domain models (@Entity)
+├── repository/             # Data access layer (@Repository, JpaRepository)
+├── services/               # Business logic layer (@Service)
+│   ├── facade/             # Facade services for orchestration (optional)
+│   ├── read/               # Services for read operations (optional, CQRS-inspired)
+│   └── write/              # Services for write operations (optional, CQRS-inspired)
+├── factories/              # Factory classes for object creation (optional)
+├── strategies/             # Strategy pattern implementations (optional)
+├── commands/               # Command pattern implementations for CQRS (optional)
+└── Application.java        # Main application class (@SpringBootApplication)

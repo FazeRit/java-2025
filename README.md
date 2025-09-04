@@ -1,18 +1,22 @@
-src/main/java/com/example/
-├── config/                 # Configuration classes (@Configuration)
-├── constants/              # Static constants
-├── controllers/            # Controllers for handling HTTP requests (@RestController)
-├── docs/                   # Swagger/OpenAPI specifications
-├── dto/                    # Data Transfer Objects (DTOs)
-│   ├── request/            # Input DTOs for request validation
-│   └── response/           # Output DTOs for response serialization
-├── entity/                 # Domain models (@Entity)
-├── repository/             # Data access layer (@Repository, JpaRepository)
-├── services/               # Business logic layer (@Service)
-│   ├── facade/             # Facade services for orchestration (optional)
-│   ├── read/               # Services for read operations (optional, CQRS-inspired)
-│   └── write/              # Services for write operations (optional, CQRS-inspired)
-├── factories/              # Factory classes for object creation (optional)
-├── strategies/             # Strategy pattern implementations (optional)
-├── commands/               # Command pattern implementations for CQRS (optional)
-└── Application.java        # Main application class (@SpringBootApplication)
+## Directory Descriptions
+
+| Directory | Purpose |
+|-----------|---------|
+| `config/` | Module configuration and setup |
+| `constants/` | Shared constants and symbols |
+| `controllers/` | HTTP request handlers (API endpoints) |
+| `docs/` | API documentation (Swagger/OpenAPI) |
+| `dto/` | Data Transfer Objects |
+| `dto/request/` | Input validation and API contracts |
+| `dto/response/` | Output serialization models |
+| `factories/` | Object creation and instantiation |
+| `interfaces/` | TypeScript interfaces and contracts |
+| `providers/` | Dependency injection configuration |
+| `services/` | Business logic and data operations |
+| `services/*/facade-service/` | Service orchestration layer |
+| `services/*/read-service/` | Data retrieval operations |
+| `services/*/write-service/` | Data modification operations |
+| `services/*/commands/` | Command pattern implementations |
+| `strategies/` | Business rule implementations |
+| `types/` | TypeScript type definitions |
+| `module.ts` | Module definition and exports |

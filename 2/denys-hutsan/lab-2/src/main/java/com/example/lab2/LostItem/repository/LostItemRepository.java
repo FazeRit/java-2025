@@ -17,4 +17,9 @@ public class LostItemRepository implements IAbstractRepository<LostItemEntity> {
         this.items.add(lostItemEntity);
         System.out.println(this.items);
     }
+
+    @Override
+    public List<LostItemEntity> getEntities(LostItemEntity... t) {
+        return this.items;
+    }
 }

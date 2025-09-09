@@ -2,11 +2,13 @@ package com.example.lab2.LostItem.services.facade;
 
 import com.example.lab2.LostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.LostItem.entity.LostItemEntity;
+import com.example.lab2.LostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.LostItem.services.read.LostItemReadService;
 import com.example.lab2.LostItem.services.write.LostItemWriteService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LostItemFacadeService {
@@ -25,5 +27,9 @@ public class LostItemFacadeService {
 
     public List<LostItemEntity> getEntities() {
         return this.read.getEntities();
+    }
+
+    public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
+        return this.read.getEntityById(id);
     }
 }

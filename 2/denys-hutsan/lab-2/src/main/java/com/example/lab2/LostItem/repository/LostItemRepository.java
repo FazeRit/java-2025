@@ -6,10 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 // TODO: make abstract repository class
 @Repository
-public class LostItemRepository implements IAbstractRepository<LostItemEntity> {
+public class LostItemRepository implements IAbstractRepository<LostItemEntity, UUID> {
     private List<LostItemEntity> items = new ArrayList<>();
 
     public void create(LostItemEntity lostItemEntity) {
@@ -21,5 +23,12 @@ public class LostItemRepository implements IAbstractRepository<LostItemEntity> {
     @Override
     public List<LostItemEntity> getEntities(LostItemEntity... t) {
         return this.items;
+    }
+
+    @Override
+    public Optional<LostItemEntity> getEntityById(UUID id) {
+        return this.items.stream()
+                .filter(li -> li.getId().equals(id))
+                .findFirst();
     }
 }

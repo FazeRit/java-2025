@@ -40,4 +40,8 @@ public class LostItemFacadeService {
     public List<LostItemEntity> getEntitiesByTag(String tag) {
         return this.read.getEntitiesByTag(tag);
     }
+
+    public List<LostItemEntity> getEntitiesByName(String name){
+        return this.read.getEntitiesByName(name);
+    }
 }

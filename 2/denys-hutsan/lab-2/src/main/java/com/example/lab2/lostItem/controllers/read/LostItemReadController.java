@@ -53,4 +53,9 @@ public class LostItemReadController {
         return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/get-items-by-name/{name}")
+    public ResponseEntity<List<LostItemEntity>> getLostItemsByName(@PathVariable("name") String name) {
+        List<LostItemEntity> items = facade.getEntitiesByName(name);
+        return ResponseEntity.ok(items);
+    }
 }

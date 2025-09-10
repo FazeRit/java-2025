@@ -38,4 +38,10 @@ public class LostItemReadService {
                 .toList();
     }
 
+    public List<LostItemEntity> getEntitiesByName(String name){
+        return this.repository.getEntities().stream()
+                .filter(item -> item.getName().equalsIgnoreCase(name))
+                .toList();
+    }
+
 }

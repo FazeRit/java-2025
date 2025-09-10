@@ -1,8 +1,8 @@
-package com.example.lab2.LostItem.services.write;
+package com.example.lab2.lostItem.services.write;
 
-import com.example.lab2.LostItem.dto.request.LostItemCreateDto;
-import com.example.lab2.LostItem.entity.LostItemEntity;
-import com.example.lab2.LostItem.repository.LostItemRepository;
+import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.repository.LostItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -27,7 +27,7 @@ public class LostItemWriteService {
         );
         lostItemEntity.setId(itemId);
 
-        this.repository.create(lostItemEntity);
+        repository.create(lostItemEntity);
 
         return lostItemEntity;
     }

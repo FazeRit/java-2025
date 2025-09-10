@@ -1,13 +1,10 @@
 package com.example.lab2.common.entity;
 
+import lombok.Data;
+
 import java.util.UUID;
 
-public class AbstractEntity {
+@Data
+public abstract class AbstractEntity {
     private UUID  id;
-    public UUID getId() {
-        return id;
-    }
-    public void setId(UUID id) {
-        this.id = id;
-    }
 }

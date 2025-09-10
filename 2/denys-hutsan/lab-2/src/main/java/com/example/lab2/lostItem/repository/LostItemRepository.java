@@ -1,7 +1,7 @@
-package com.example.lab2.LostItem.repository;
+package com.example.lab2.lostItem.repository;
 
-import com.example.lab2.LostItem.entity.LostItemEntity;
-import com.example.lab2.common.interfaces.IAbstractRepository;
+import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.common.interfaces.AbstractRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import java.util.UUID;
 
 // TODO: make abstract repository class
 @Repository
-public class LostItemRepository implements IAbstractRepository<LostItemEntity, UUID> {
-    private List<LostItemEntity> items = new ArrayList<>();
+public class LostItemRepository implements AbstractRepository<LostItemEntity, UUID> {
+    private final List<LostItemEntity> items = new ArrayList<>();
 
     public void create(LostItemEntity lostItemEntity) {
         System.out.println(this.items);

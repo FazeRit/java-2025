@@ -1,10 +1,9 @@
-package com.example.lab2.LostItem.controllers.write;
+package com.example.lab2.lostItem.controllers.write;
 
-import com.example.lab2.LostItem.dto.request.LostItemCreateDto;
-import com.example.lab2.LostItem.entity.LostItemEntity;
-import com.example.lab2.LostItem.services.facade.LostItemFacadeService;
+import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

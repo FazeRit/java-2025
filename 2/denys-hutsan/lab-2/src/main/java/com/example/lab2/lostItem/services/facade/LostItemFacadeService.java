@@ -22,26 +22,26 @@ public class LostItemFacadeService {
     }
 
     public LostItemEntity create(LostItemCreateDto dto) {
-        return this.write.create(dto);
+        return write.create(dto);
     }
 
     public List<LostItemEntity> getEntities() {
-        return this.read.getEntities();
+        return read.getEntities();
     }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
-        return this.read.getEntityById(id);
+        return read.getEntityById(id);
     }
 
     public LostItemEntity getEntityByName(String name) throws LostItemNotFoundException {
-        return this.read.getEntityByName(name);
+        return read.getEntityByName(name);
     }
 
     public List<LostItemEntity> getEntitiesByTag(String tag) {
-        return this.read.getEntitiesByTag(tag);
+        return read.getEntitiesByTag(tag);
     }
 
     public List<LostItemEntity> getEntitiesByName(String name){
-        return this.read.getEntitiesByName(name);
+        return read.getEntitiesByName(name);
     }
 }

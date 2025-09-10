@@ -23,7 +23,7 @@ public class LostItemWriteController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LostItemEntity> createLostItem(@Valid @RequestBody LostItemCreateDto lostItem) {
-        LostItemEntity item = this.facade.create(lostItem);
+        LostItemEntity item = facade.create(lostItem);
 
         return ResponseEntity
                 .created(URI.create("/lost-items/" + item.getId()))

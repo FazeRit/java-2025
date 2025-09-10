@@ -17,31 +17,30 @@ public class LostItemReadService {
     }
 
     public List<LostItemEntity> getEntities() {
-        return this.repository.getEntities();
+        return repository.getEntities();
     }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
-        return this.repository.getEntityById(id)
+        return repository.getEntityById(id)
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
     public LostItemEntity getEntityByName(String name) throws LostItemNotFoundException {
-        return this.repository.getEntities().stream()
+        return repository.getEntities().stream()
                 .filter(item -> item.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(() -> new LostItemNotFoundException(name));
     }
 
     public List<LostItemEntity> getEntitiesByTag(String tag) {
-        return this.repository.getEntities().stream()
+        return repository.getEntities().stream()
                 .filter(item -> item.getTags().contains(tag))
                 .toList();
     }
 
     public List<LostItemEntity> getEntitiesByName(String name){
-        return this.repository.getEntities().stream()
+        return repository.getEntities().stream()
                 .filter(item -> item.getName().equalsIgnoreCase(name))
                 .toList();
     }
-
 }

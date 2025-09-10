@@ -27,7 +27,7 @@ public class LostItemWriteService {
         );
         lostItemEntity.setId(itemId);
 
-        this.repository.create(lostItemEntity);
+        repository.create(lostItemEntity);
 
         return lostItemEntity;
     }

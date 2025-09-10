@@ -15,19 +15,19 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
     private final List<LostItemEntity> items = new ArrayList<>();
 
     public void create(LostItemEntity lostItemEntity) {
-        System.out.println(this.items);
-        this.items.add(lostItemEntity);
-        System.out.println(this.items);
+        System.out.println(items);
+        items.add(lostItemEntity);
+        System.out.println(items);
     }
 
     @Override
     public List<LostItemEntity> getEntities(LostItemEntity... t) {
-        return this.items;
+        return items;
     }
 
     @Override
     public Optional<LostItemEntity> getEntityById(UUID id) {
-        return this.items.stream()
+        return items.stream()
                 .filter(li -> li.getId().equals(id))
                 .findFirst();
     }

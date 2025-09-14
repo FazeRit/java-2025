@@ -44,4 +44,8 @@ public class LostItemFacadeService {
     public List<LostItemEntity> getEntitiesByName(String name){
         return read.getEntitiesByName(name);
     }
+
+    public void delete(UUID id) throws LostItemNotFoundException {
+        write.delete(id);
+    }
 }

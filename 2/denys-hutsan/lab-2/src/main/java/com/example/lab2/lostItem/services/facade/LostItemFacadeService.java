@@ -33,15 +33,7 @@ public class LostItemFacadeService {
         return read.getEntityById(id);
     }
 
-    public LostItemEntity getEntityByName(String name) throws LostItemNotFoundException {
-        return read.getEntityByName(name);
-    }
-
-    public List<LostItemEntity> getEntitiesByTag(String tag) {
-        return read.getEntitiesByTag(tag);
-    }
-
-    public List<LostItemEntity> getEntitiesByName(String name){
-        return read.getEntitiesByName(name);
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
+        return read.searchLostItems(name, tags);
     }
 }

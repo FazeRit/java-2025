@@ -30,32 +30,17 @@ public class LostItemReadController {
         try {
             LostItemEntity lostItem = facade.getEntityById(id);
             return ResponseEntity.ok(lostItem);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/get-item/{name}")
-    public ResponseEntity<LostItemEntity> getLostItemByName(@PathVariable("name") String name) {
-        try {
-            LostItemEntity lostItem = facade.getEntityByName(name);
-            return ResponseEntity.ok(lostItem);
-        }
-        catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/get-items-by-tag/{tag}")
-    public ResponseEntity<List<LostItemEntity>> getLostItemsByTag(@PathVariable("tag") String tag) {
-        List<LostItemEntity> items = facade.getEntitiesByTag(tag);
-        return ResponseEntity.ok(items);
-    }
-
-    @GetMapping("/get-items-by-name/{name}")
-    public ResponseEntity<List<LostItemEntity>> getLostItemsByName(@PathVariable("name") String name) {
-        List<LostItemEntity> items = facade.getEntitiesByName(name);
+    @GetMapping("/search")
+    public ResponseEntity<List<LostItemEntity>> searchLostItems(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<String> tags
+    ) {
+        List<LostItemEntity> items = facade.searchLostItems(name, tags);
         return ResponseEntity.ok(items);
     }
 }

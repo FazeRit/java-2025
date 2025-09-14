@@ -31,4 +31,8 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
                 .filter(li -> li.getId().equals(id))
                 .findFirst();
     }
+
+    public boolean delete(UUID id) {
+        return items.removeIf(li -> li.getId().equals(id));
+    }
 }

@@ -7,8 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.util.UUID;
 
 // TODO: make exception handler
 @RestController
@@ -28,5 +30,15 @@ public class LostItemWriteController {
         return ResponseEntity
                 .created(URI.create("/lost-items/" + item.getId()))
                 .body(item);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLostItem(@PathVariable UUID id) {
+        try {
+            facade.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

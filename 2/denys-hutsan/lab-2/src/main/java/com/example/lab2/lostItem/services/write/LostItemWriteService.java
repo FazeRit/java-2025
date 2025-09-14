@@ -2,6 +2,7 @@ package com.example.lab2.lostItem.services.write;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.repository.LostItemRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,10 @@ public class LostItemWriteService {
         repository.create(lostItemEntity);
 
         return lostItemEntity;
+    }
+
+    public void delete(UUID id) throws LostItemNotFoundException {
+        boolean deleted = repository.delete(id);
+        if (!deleted) throw new LostItemNotFoundException(id);
     }
 }

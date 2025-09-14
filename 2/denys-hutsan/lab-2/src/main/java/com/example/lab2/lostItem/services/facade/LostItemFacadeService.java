@@ -33,6 +33,11 @@ public class LostItemFacadeService {
         return read.getEntityById(id);
     }
 
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
+        // Currently only filtering by name, can be extended to filter by tags as well
+        return read.searchLostItems(name, tags);
+    }
+
     public LostItemEntity getEntityByName(String name) throws LostItemNotFoundException {
         return read.getEntityByName(name);
     }

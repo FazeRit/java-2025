@@ -30,19 +30,27 @@ public class LostItemReadController {
         try {
             LostItemEntity lostItem = facade.getEntityById(id);
             return ResponseEntity.ok(lostItem);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<LostItemEntity>> searchLostItems(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<String> tags
+    ) {
+        List<LostItemEntity> items = facade.searchLostItems(name, tags);
+        return ResponseEntity.ok(items);
+    }
+
 
     @GetMapping("/get-item/{name}")
     public ResponseEntity<LostItemEntity> getLostItemByName(@PathVariable("name") String name) {
         try {
             LostItemEntity lostItem = facade.getEntityByName(name);
             return ResponseEntity.ok(lostItem);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

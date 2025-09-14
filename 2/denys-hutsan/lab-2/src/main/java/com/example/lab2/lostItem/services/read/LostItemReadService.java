@@ -40,7 +40,14 @@ public class LostItemReadService {
 
     public List<LostItemEntity> getEntitiesByName(String name){
         return repository.getEntities().stream()
-                .filter(item -> item.getName().equalsIgnoreCase(name))
+                .filter(item -> item.getName().toLowerCase().contains(name.toLowerCase()))
+                .toList();
+    }
+
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
+        return repository.getEntities().stream()
+                .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&
+                        (tags == null || tags.isEmpty() || item.getTags() != null && item.getTags().stream().anyMatch(tags::contains)))
                 .toList();
     }
 }

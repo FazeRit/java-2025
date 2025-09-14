@@ -25,25 +25,6 @@ public class LostItemReadService {
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
-    public LostItemEntity getEntityByName(String name) throws LostItemNotFoundException {
-        return repository.getEntities().stream()
-                .filter(item -> item.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElseThrow(() -> new LostItemNotFoundException(name));
-    }
-
-    public List<LostItemEntity> getEntitiesByTag(String tag) {
-        return repository.getEntities().stream()
-                .filter(item -> item.getTags().contains(tag))
-                .toList();
-    }
-
-    public List<LostItemEntity> getEntitiesByName(String name){
-        return repository.getEntities().stream()
-                .filter(item -> item.getName().toLowerCase().contains(name.toLowerCase()))
-                .toList();
-    }
-
     public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
         return repository.getEntities().stream()
                 .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&

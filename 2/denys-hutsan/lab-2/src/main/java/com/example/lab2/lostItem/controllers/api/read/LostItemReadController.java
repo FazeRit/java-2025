@@ -1,17 +1,16 @@
-package com.example.lab2.lostItem.controllers.read;
+package com.example.lab2.lostItem.controllers.api.read;
 
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("lost-items")
+@RequestMapping("api/lost-items")
 public class LostItemReadController {
     private final LostItemFacadeService facade;
 
@@ -26,13 +25,9 @@ public class LostItemReadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable("id") UUID id) {
-        try {
-            LostItemEntity lostItem = facade.getEntityById(id);
-            return ResponseEntity.ok(lostItem);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable() UUID id) throws LostItemNotFoundException {
+        LostItemEntity item = facade.getEntityById(id);
+        return ResponseEntity.ok(item);
     }
 
     @GetMapping("/search")

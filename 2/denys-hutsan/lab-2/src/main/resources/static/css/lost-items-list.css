@@ -1,0 +1,41 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1 { margin-bottom: 15px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #ddd; padding: 8px; }
+th { background-color: #f2f2f2; text-align: left; }
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.tags a {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #eaf3ff;
+    border: 1px solid #b6d4fe;
+    color: #004085;
+    font-size: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.tags a:hover {
+    background: #d0e3ff;
+    border-color: #80bdff;
+}
+
+/* 🔹 Новий стиль для імен */
+td a {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #2c3e50;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+}
+td a:hover {
+    color: #0077cc;
+    text-decoration: underline;
+}

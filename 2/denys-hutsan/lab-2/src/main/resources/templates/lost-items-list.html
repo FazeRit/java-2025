@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lost Items</title>
+    <link rel="stylesheet" th:href="@{/css/lost-items-list.css}">
+</head>
+<body>
+<h1>Lost Items</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Tags</th>
+        <th>Location</th>
+        <th>Phone</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td>
+            <a th:href="@{/lost-items/{id}(id=${item.id})}"
+               th:text="${item.name}">Sample name</a>
+        </td>
+        <td th:text="${item.description}">Sample description</td>
+        <td class="tags">
+            <a th:each="t : ${item.tags}"
+               th:href="@{/lost-items/search(tags=${t})}"
+               th:text="${t}">tag</a>
+        </td>
+        <td th:text="${item.location}">Sample location</td>
+        <td>
+            <a th:href="'tel:' + ${item.phoneNumber}"
+               th:text="${item.phoneNumber}">+380...</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

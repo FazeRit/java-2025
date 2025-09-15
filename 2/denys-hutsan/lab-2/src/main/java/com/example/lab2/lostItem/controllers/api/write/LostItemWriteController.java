@@ -1,4 +1,4 @@
-package com.example.lab2.lostItem.controllers.write;
+package com.example.lab2.lostItem.controllers.api.write;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 // TODO: make exception handler
 @RestController
-@RequestMapping("lost-items")
+@RequestMapping("api/lost-items")
 public class LostItemWriteController {
     private final LostItemFacadeService facade;
 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lost Item Details</title>
+    <link rel="stylesheet" th:href="@{/css/lost-item.css}">
+</head>
+<body>
+
+<h1>Lost Item Details</h1>
+
+<div class="container" th:object="${lostItem}">
+    <div class="left">
+        <div class="field">
+            <span class="label">Name:</span>
+            <span th:text="*{name}">Sample name</span>
+        </div>
+
+        <div class="field">
+            <span class="label">Description:</span>
+            <span th:text="*{description}">Sample description</span>
+        </div>
+
+        <div class="field phone">
+            <span class="label">Phone:</span>
+            <a th:href="'tel:' + *{phoneNumber}" th:text="*{phoneNumber}">+380...</a>
+        </div>
+
+        <div class="field">
+            <span class="label">Location:</span>
+            <span th:text="*{location}">Sample location</span>
+        </div>
+    </div>
+
+    <div class="right">
+        <span class="label">Tags:</span>
+        <div class="tags">
+            <a th:each="t : *{tags}"
+               th:href="@{/lost-items/search(tags=${t})}"
+               th:text="${t}">tag</a>
+        </div>
+            <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post">
+                <button type="submit" class="btn delete">Delete Item</button>
+            </form>
+    </div>
+</div>
+
+<div class="back-wrapper">
+    <a th:href="@{/lost-items/}" class="btn">← Back to list</a>
+</div>
+
+</body>
+</html>

@@ -27,12 +27,12 @@ public class LostItemReadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable() UUID id) throws LostItemNotFoundException {
+    public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable() UUID id) {
         try {
             LostItemEntity item = facade.getEntityById(id);
             return ResponseEntity.ok(item);
         } catch (LostItemNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

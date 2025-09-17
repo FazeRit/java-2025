@@ -35,7 +35,7 @@ public class LostItemWriteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLostItem(@PathVariable UUID id) {
         try {
-            facade.delete(id);
+            facade.deleteLostItem(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

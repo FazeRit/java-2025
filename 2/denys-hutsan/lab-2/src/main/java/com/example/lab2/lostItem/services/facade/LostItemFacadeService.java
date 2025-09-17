@@ -37,7 +37,7 @@ public class LostItemFacadeService {
         return read.searchLostItems(name, tags);
     }
 
-    public void delete(UUID id) throws LostItemNotFoundException {
+    public void deleteLostItem(UUID id) throws LostItemNotFoundException {
         write.delete(id);
     }
 }

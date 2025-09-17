@@ -32,7 +32,6 @@ public class LostItemReadWebController {
     @GetMapping("/{id}")
     public String getLostItemById(@PathVariable() UUID id, Model model) throws LostItemNotFoundException {
         model.addAttribute("lostItem", facade.getEntityById(id));
-        System.out.println(facade.getEntityById(id));
         return "lost-item";
     }
 

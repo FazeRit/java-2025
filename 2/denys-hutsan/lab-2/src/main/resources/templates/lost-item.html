@@ -39,11 +39,14 @@
                th:href="@{/lost-items/search(tags=${t})}"
                th:text="${t}">tag</a>
         </div>
+            <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post">
+                <button type="submit" class="btn delete">Delete Item</button>
+            </form>
     </div>
 </div>
 
 <div class="back-wrapper">
-    <a th:href="@{/lost-items/}" class="back">← Back to list</a>
+    <a th:href="@{/lost-items/}" class="btn">← Back to list</a>
 </div>
 
 </body>

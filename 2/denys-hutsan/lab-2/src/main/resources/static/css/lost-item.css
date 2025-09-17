@@ -52,6 +52,9 @@ h1 { margin-bottom: 20px; text-align: center; }
 .back-wrapper {
     text-align: center;
     margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
 .btn {
     display: inline-block;
@@ -69,4 +72,15 @@ h1 { margin-bottom: 20px; text-align: center; }
 .delete {
     cursor: pointer;
     margin-top: 15px;
+}
+
+.btn-create {
+    background: #0077cc;
+    border-color: #0077cc;
+    color: white;
+}
+
+.btn-create:hover {
+    background: #0056b3;
+    border-color: #0056b3;
 }

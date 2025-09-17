@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Lost Item</title>
+    <link rel="stylesheet" th:href="@{/css/lost-item-create.css}">
+</head>
+<body>
+
+<h1>Create Lost Item</h1>
+
+<div class="form-container">
+    <form
+        th:action="@{/lost-items/create}"
+        th:object="${lostItemCreateDto}"
+        method="post"
+        class="create-form"
+    >
+        <div class="form-group">
+            <label for="name" class="form-label">Name *</label>
+            <input type="text"
+                id="name"
+                th:field="*{name}"
+                class="form-input"
+                placeholder="Enter item name"
+                required>
+            <div th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description"
+                    th:field="*{description}"
+                    class="form-textarea"
+                    placeholder="Enter item description"
+                    rows="4">
+            </textarea>
+            <div th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="location" class="form-label">Location *</label>
+            <input type="text"
+                id="location"
+                th:field="*{location}"
+                class="form-input"
+                placeholder="Enter location where item was lost"
+                required>
+            <div th:if="${#fields.hasErrors('location')}" class="error-message" th:errors="*{location}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber" class="form-label">Phone Number *</label>
+            <input type="tel"
+                id="phoneNumber"
+                th:field="*{phoneNumber}"
+                class="form-input"
+                placeholder="+1234567890"
+                required>
+            <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message" th:errors="*{phoneNumber}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="tags" class="form-label">Tags</label>
+            <input type="text"
+                id="tags"
+                th:field="*{tags}"
+                class="form-input"
+                placeholder="Enter tags separated by commas (e.g., wallet, black, leather)">
+            <div class="form-hint">Separate multiple tags with commas</div>
+            <div th:if="${#fields.hasErrors('tags')}" class="error-message" th:errors="*{tags}"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Lost Item</button>
+            <a th:href="@{/lost-items/}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+    
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+</div>
+
+</body>
+</html>

@@ -3,18 +3,16 @@ package com.example.lab2.lostItem.services.read;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.repository.LostItemRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class LostItemReadService {
     private final LostItemRepository repository;
-
-    public LostItemReadService(LostItemRepository repository) {
-        this.repository = repository;
-    }
 
     public List<LostItemEntity> getEntities() {
         return repository.getEntities();

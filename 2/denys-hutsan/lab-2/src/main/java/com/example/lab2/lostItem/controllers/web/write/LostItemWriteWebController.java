@@ -4,6 +4,7 @@ import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,17 +16,15 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/lost-items")
+@AllArgsConstructor
 public class LostItemWriteWebController {
+    private static final String CREATE_VIEW = "lost-item-create";
     private final LostItemFacadeService facade;
-
-    public LostItemWriteWebController(LostItemFacadeService facade) {
-        this.facade = facade;
-    }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("lostItemCreateDto", new LostItemCreateDto());
-        return "lost-item-create";
+        return CREATE_VIEW;
     }
 
     @PostMapping("/create")
@@ -35,7 +34,7 @@ public class LostItemWriteWebController {
         Model model
     ) {
         if (bindingResult.hasErrors()) {
-            return "lost-item-create";
+            return CREATE_VIEW;
         }
 
         try {
@@ -43,7 +42,7 @@ public class LostItemWriteWebController {
             return "redirect:/lost-items/" + createdItem.getId();
         } catch (Exception e) {
             model.addAttribute("error", "Failed to create lost item: " + e.getMessage());
-            return "lost-item-create";
+            return CREATE_VIEW;
         }
     }
 

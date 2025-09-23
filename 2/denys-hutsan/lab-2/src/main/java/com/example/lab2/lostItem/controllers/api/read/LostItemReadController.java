@@ -3,6 +3,7 @@ package com.example.lab2.lostItem.controllers.api.read;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +14,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/lost-items")
+@AllArgsConstructor
 public class LostItemReadController {
     private final LostItemFacadeService facade;
 
-    public LostItemReadController(LostItemFacadeService facade) {
-        this.facade = facade;
-    }
 
     @GetMapping("/")
     public ResponseEntity<List<LostItemEntity>> getLostItems() {
-        List<LostItemEntity> items = facade.getEntities();
+        List<LostItemEntity> items  = facade.getEntities();
         return ResponseEntity.ok(items);
     }
 
@@ -41,7 +40,7 @@ public class LostItemReadController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> tags
     ) {
-        List<LostItemEntity> items = facade.searchLostItems(name, tags);
-        return ResponseEntity.ok(items);
+        List<LostItemEntity> itemEntities = facade.searchLostItems(name, tags);
+        return ResponseEntity.ok(itemEntities);
     }
 }

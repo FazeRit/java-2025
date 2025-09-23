@@ -2,6 +2,7 @@ package com.example.lab2.lostItem.controllers.web.read;
 
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +17,10 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/lost-items")
+@AllArgsConstructor
 public class LostItemReadWebController {
 
     LostItemFacadeService facade;
-
-    public LostItemReadWebController(LostItemFacadeService facade) {
-        this.facade = facade;
-    }
 
     @GetMapping("/")
     public String getLostItems(Model model) {

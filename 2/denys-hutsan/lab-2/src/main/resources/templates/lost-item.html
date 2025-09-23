@@ -35,14 +35,19 @@
     <div class="right">
         <span class="label">Tags:</span>
         <div class="tags">
+            <div th:switch="*{tags != null} ? *{tags.size()} : 0">
+                <span th:case="0">No tags</span>
+                <span th:case="1">1 tag</span>
+                <span th:case="*">[[*{tags.size()}]] tags</span>
+            </div>
+
             <a th:each="t : *{tags}"
-                th:href="@{/lost-items/search(tags=${t})}"
-                th:text="${t}"
-            >
-            tag
+               th:href="@{/lost-items/search(tags=${t})}"
+               th:text="${t}">
+                tag
             </a>
         </div>
-            <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post">
+        <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post">
                 <button type="submit" class="btn delete">Delete Item</button>
             </form>
     </div>

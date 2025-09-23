@@ -23,7 +23,8 @@
                 th:field="*{name}"
                 class="form-input"
                 placeholder="Enter item name"
-                required>
+                required
+                   maxlength="500">
             <div th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></div>
         </div>
 
@@ -45,7 +46,8 @@
                 th:field="*{location}"
                 class="form-input"
                 placeholder="Enter location where item was lost"
-                required>
+                required
+                   maxlength="500">
             <div th:if="${#fields.hasErrors('location')}" class="error-message" th:errors="*{location}"></div>
         </div>
 
@@ -56,7 +58,8 @@
                 th:field="*{phoneNumber}"
                 class="form-input"
                 placeholder="+1234567890"
-                required>
+                required
+                   maxlength="500">
             <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message" th:errors="*{phoneNumber}"></div>
         </div>
 

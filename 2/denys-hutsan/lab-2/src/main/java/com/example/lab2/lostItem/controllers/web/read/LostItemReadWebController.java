@@ -23,9 +23,18 @@ public class LostItemReadWebController {
     }
 
     @GetMapping("/")
-    public String getLostItems(Model model) {
-        var items = facade.getEntities();
+    public String getLostItems(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int itemsPerPage,
+            Model model) {
+
+        var items = facade.getEntities(page,  itemsPerPage);
+        int totalPages = facade.getTotalPages(itemsPerPage);
+
         model.addAttribute("items", items);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "lost-items-list";
     }
 

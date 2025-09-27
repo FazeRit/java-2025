@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface AbstractRepository<T extends AbstractEntity, ID>{
     void create(T t);
-    List<T> getEntities(T... t);
+    List<T> getEntities(int page, int itemsPerPage);
     Optional<T> getEntityById(ID id);
 }

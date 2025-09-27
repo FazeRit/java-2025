@@ -16,8 +16,8 @@ public class LostItemReadService {
         this.repository = repository;
     }
 
-    public List<LostItemEntity> getEntities() {
-        return repository.getEntities();
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+        return repository.getEntities(page, itemsPerPage);
     }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
@@ -26,9 +26,13 @@ public class LostItemReadService {
     }
 
     public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
-        return repository.getEntities().stream()
+        return repository.getEntities(1, 2).stream() // TODO: replace with a real pagination
                 .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&
                         (tags == null || tags.isEmpty() || item.getTags() != null && item.getTags().stream().anyMatch(tags::contains)))
                 .toList();
+    }
+
+    public int getTotalPages(int itemsPerPage) {
+        return repository.getTotalPages(itemsPerPage);
     }
 }

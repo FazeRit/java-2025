@@ -19,8 +19,11 @@ public class LostItemReadController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<LostItemEntity>> getLostItems() {
-        List<LostItemEntity> items = facade.getEntities();
+    public ResponseEntity<List<LostItemEntity>> getLostItems(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int itemsPerPage
+    ) {
+        List<LostItemEntity> items = facade.getEntities(page, itemsPerPage);
         return ResponseEntity.ok(items);
     }
 

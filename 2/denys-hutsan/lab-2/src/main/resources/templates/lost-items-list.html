@@ -39,5 +39,23 @@
     </tbody>
 </table>
 
+<div class="pagination">
+    <ul>
+        <li th:classappend="${currentPage == 1} ? 'disabled'" th:if="${totalPages >= 1}">
+            <a th:href="@{/lost-items/(page=${currentPage - 1})}">&laquo; Prev</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}"
+            th:if="${i >= 1 and i <= totalPages}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a th:href="@{/lost-items/(page=${i})}" th:text="${i}">1</a>
+        </li>
+
+        <li th:classappend="${currentPage == totalPages} ? 'disabled'" th:if="${totalPages >= 1}">
+            <a th:href="@{/lost-items/(page=${currentPage + 1})}">Next &raquo;</a>
+        </li>
+    </ul>
+</div>
+
 </body>
 </html>

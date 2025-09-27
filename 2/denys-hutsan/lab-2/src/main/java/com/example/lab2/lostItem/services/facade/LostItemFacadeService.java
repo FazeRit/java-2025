@@ -25,9 +25,11 @@ public class LostItemFacadeService {
         return write.create(dto);
     }
 
-    public List<LostItemEntity> getEntities() {
-        return read.getEntities();
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+        return read.getEntities(page, itemsPerPage);
     }
+
+    public int getTotalPages(int itemsPerPage) { return  read.getTotalPages(itemsPerPage); }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
         return read.getEntityById(id);

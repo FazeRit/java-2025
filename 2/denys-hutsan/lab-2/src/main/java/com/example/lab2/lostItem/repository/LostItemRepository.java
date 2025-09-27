@@ -21,8 +21,20 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
     }
 
     @Override
-    public List<LostItemEntity> getEntities(LostItemEntity... t) {
-        return items;
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+        if (page < 1 || itemsPerPage < 1) {
+            throw new IllegalArgumentException("Page and itemsPerPage must be greater than 0");
+        }
+
+        int fromIndex = (page - 1) * itemsPerPage;
+
+        if (fromIndex >= items.size()) {
+            return new ArrayList<>();
+        }
+
+        int toIndex = Math.min(fromIndex + itemsPerPage, items.size());
+
+        return items.subList(fromIndex, toIndex);
     }
 
     @Override
@@ -34,5 +46,9 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
 
     public boolean delete(UUID id) {
         return items.removeIf(li -> li.getId().equals(id));
+    }
+
+    public int getTotalPages(int itemsPerPage) {
+        return (int) Math.ceil((double) items.size() / itemsPerPage);
     }
 }

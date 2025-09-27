@@ -14,8 +14,8 @@ import java.util.UUID;
 public class LostItemReadService {
     private final LostItemRepository repository;
 
-    public List<LostItemEntity> getEntities() {
-        return repository.getEntities();
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+        return repository.getEntities(page, itemsPerPage);
     }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
@@ -23,10 +23,18 @@ public class LostItemReadService {
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
-    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
-        return repository.getEntities().stream()
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+        List<LostItemEntity> filteredItems = repository.getAllEntities().stream()
                 .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&
                         (tags == null || tags.isEmpty() || item.getTags() != null && item.getTags().stream().anyMatch(tags::contains)))
                 .toList();
+
+        int toIndex = Math.min((page - 1) * itemsPerPage + itemsPerPage, filteredItems.size());
+
+        return filteredItems.subList(0, toIndex);
+    }
+
+    public int getTotalPages(int itemsPerPage) {
+        return repository.getTotalPages(itemsPerPage);
     }
 }

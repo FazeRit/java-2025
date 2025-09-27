@@ -22,16 +22,18 @@ public class LostItemFacadeService {
         return write.create(dto);
     }
 
-    public List<LostItemEntity> getEntities() {
-        return read.getEntities();
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+        return read.getEntities(page, itemsPerPage);
     }
+
+    public int getTotalPages(int itemsPerPage) { return  read.getTotalPages(itemsPerPage); }
 
     public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
         return read.getEntityById(id);
     }
 
-    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
-        return read.searchLostItems(name, tags);
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+        return read.searchLostItems(name, tags,  page, itemsPerPage);
     }
 
     public void deleteLostItem(UUID id) throws LostItemNotFoundException {

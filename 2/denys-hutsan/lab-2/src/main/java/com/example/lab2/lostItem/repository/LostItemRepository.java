@@ -2,6 +2,7 @@ package com.example.lab2.lostItem.repository;
 
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.common.interfaces.AbstractRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,11 @@ import java.util.UUID;
 public class LostItemRepository implements AbstractRepository<LostItemEntity, UUID> {
     private final List<LostItemEntity> items;
 
+    @PostConstruct
+    private void init() {
+        items.addAll(setTestItems());
+    }
+
     public void create(LostItemEntity lostItemEntity) {
         System.out.println(items);
         items.add(lostItemEntity);
@@ -23,7 +29,20 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
     }
 
     @Override
-    public List<LostItemEntity> getEntities(LostItemEntity... t) {
+    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+
+        int fromIndex = (page - 1) * itemsPerPage;
+
+        if (fromIndex >= items.size()) {
+            return new ArrayList<>();
+        }
+
+        int toIndex = Math.min(fromIndex + itemsPerPage, items.size());
+
+        return items.subList(fromIndex, toIndex);
+    }
+
+    public List<LostItemEntity> getAllEntities() {
         return items;
     }
 
@@ -36,6 +55,10 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
 
     public boolean delete(UUID id) {
         return items.removeIf(li -> li.getId().equals(id));
+    }
+
+    public int getTotalPages(int itemsPerPage) {
+        return (int) Math.ceil((double) items.size() / itemsPerPage);
     }
 
     private List<LostItemEntity> setTestItems() {

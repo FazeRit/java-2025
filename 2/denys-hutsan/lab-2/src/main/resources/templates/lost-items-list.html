@@ -6,10 +6,26 @@
     <link rel="stylesheet" th:href="@{/css/lost-items-list.css}">
 </head>
 <body>
-<h1>Lost Items</h1>
 
-<div class="header-actions">
-    <a th:href="@{/lost-items/create}" class="btn btn-create">+ Create New Item</a>
+<div class="header">
+
+    <h1>Lost Items</h1>
+
+    <div class="header-actions">
+        <form th:action="@{/lost-items/search}" method="get" class="search-form">
+            <input type="text" name="name" placeholder="Search..." />
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        <a th:href="@{/lost-items/create}" class="btn btn-create">+ Create New Item</a>
+    </div>
+</div>
+
+<div class="search-header" th:if="${searchQuery != null}">
+    <a th:href="@{/lost-items/}" class="btn">Back</a>
+    <h3>
+        Search results for "<span th:text="${searchQuery}"></span>"
+    </h3>
 </div>
 
 <table>
@@ -42,6 +58,29 @@
     </tr>
     </tbody>
 </table>
+
+<div class="pagination" th:if="${!(searchQuery != null)}">
+    <ul>
+        <li th:classappend="${currentPage == 1} ? 'disabled'" th:if="${totalPages >= 1}">
+            <a th:href="@{/lost-items/(page=${currentPage - 1})}">&laquo; Prev</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}"
+            th:if="${i >= 1 and i <= totalPages}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a th:href="@{/lost-items/(page=${i})}" th:text="${i}">1</a>
+        </li>
+
+        <li th:classappend="${currentPage == totalPages} ? 'disabled'" th:if="${totalPages >= 1}">
+            <a th:href="@{/lost-items/(page=${currentPage + 1})}">Next &raquo;</a>
+        </li>
+    </ul>
+</div>
+
+<div class="more" th:if="${itemsPerPage != null && items.size() == (currentPage * itemsPerPage)}">
+    <a th:href="@{/lost-items/search(page=${currentPage + 1}, name=${name}, tags=${tags})}"
+       class="btn btn-more">More</a>
+</div>
 
 </body>
 </html>

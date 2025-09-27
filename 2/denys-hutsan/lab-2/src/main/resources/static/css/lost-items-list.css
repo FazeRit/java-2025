@@ -1,11 +1,6 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
 h1 { margin-bottom: 15px; }
 
-.header-actions {
-    margin-bottom: 20px;
-    text-align: right;
-}
-
 .btn {
     display: inline-block;
     padding: 10px 18px;
@@ -58,7 +53,6 @@ th { background-color: #f2f2f2; text-align: left; }
     border-color: #80bdff;
 }
 
-/* 🔹 Новий стиль для імен */
 td a {
     font-family: "Segoe UI", Arial, sans-serif;
     font-weight: bold;
@@ -71,4 +65,80 @@ td a {
 td a:hover {
     color: #0077cc;
     text-decoration: underline;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 25px;
+}
+
+.pagination ul {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination a,
+.pagination li.disabled span {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.pagination .active a {
+    background-color: #d0e3ff;
+    border-color: #80bdff;
+}
+
+.pagination li.disabled {
+    pointer-events: none;
+}
+.pagination li.disabled a,
+.pagination li.disabled span {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-form {
+    display: flex;
+    gap: 6px;
+}
+
+.search-form input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.more {
+    display: flex;
+    padding-top: 15px;
+    justify-content: center;
 }

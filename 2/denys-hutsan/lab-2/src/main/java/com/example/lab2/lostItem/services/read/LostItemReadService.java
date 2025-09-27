@@ -14,10 +14,6 @@ import java.util.UUID;
 public class LostItemReadService {
     private final LostItemRepository repository;
 
-    public LostItemReadService(LostItemRepository repository) {
-        this.repository = repository;
-    }
-
     public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
         return repository.getEntities(page, itemsPerPage);
     }

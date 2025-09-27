@@ -23,11 +23,15 @@ public class LostItemReadService {
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
-    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
-        return repository.getEntities(1, 2).stream() // TODO: replace with a real pagination
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+        List<LostItemEntity> filteredItems = repository.getAllEntities().stream()
                 .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&
                         (tags == null || tags.isEmpty() || item.getTags() != null && item.getTags().stream().anyMatch(tags::contains)))
                 .toList();
+
+        int toIndex = Math.min((page - 1) * itemsPerPage + itemsPerPage, filteredItems.size());
+
+        return filteredItems.subList(0, toIndex);
     }
 
     public int getTotalPages(int itemsPerPage) {

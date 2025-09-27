@@ -1,11 +1,6 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
 h1 { margin-bottom: 15px; }
 
-.header-actions {
-    margin-bottom: 20px;
-    text-align: right;
-}
-
 .btn {
     display: inline-block;
     padding: 10px 18px;
@@ -111,4 +106,39 @@ td a:hover {
 .pagination li.disabled span {
     color: #aaa;
     cursor: not-allowed;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-form {
+    display: flex;
+    gap: 6px;
+}
+
+.search-form input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.more {
+    display: flex;
+    padding-top: 15px;
+    justify-content: center;
 }

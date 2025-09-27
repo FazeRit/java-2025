@@ -40,10 +40,12 @@ public class LostItemReadController {
 
     @GetMapping("/search")
     public ResponseEntity<List<LostItemEntity>> searchLostItems(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int itemsPerPage,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> tags
     ) {
-        List<LostItemEntity> itemEntities = facade.searchLostItems(name, tags);
+        List<LostItemEntity> itemEntities = facade.searchLostItems(name, tags, page, itemsPerPage);
         return ResponseEntity.ok(itemEntities);
     }
 }

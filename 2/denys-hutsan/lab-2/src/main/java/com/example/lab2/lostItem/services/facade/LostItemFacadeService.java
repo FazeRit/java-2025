@@ -32,8 +32,8 @@ public class LostItemFacadeService {
         return read.getEntityById(id);
     }
 
-    public List<LostItemEntity> searchLostItems(String name, List<String> tags) {
-        return read.searchLostItems(name, tags);
+    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+        return read.searchLostItems(name, tags,  page, itemsPerPage);
     }
 
     public void deleteLostItem(UUID id) throws LostItemNotFoundException {

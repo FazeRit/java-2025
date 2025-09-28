@@ -1,6 +1,7 @@
 package com.example.lab2.lostItem.services.facade;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.read.LostItemReadService;
@@ -24,6 +25,10 @@ public class LostItemFacadeService {
 
     public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
         return read.getEntities(page, itemsPerPage);
+    }
+
+    public LostItemEntity update(UUID id, LostItemUpdateDto dto) throws LostItemNotFoundException {
+        return write.update(id, dto);
     }
 
     public int getTotalPages(int itemsPerPage) { return  read.getTotalPages(itemsPerPage); }

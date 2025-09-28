@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="lab-2" />
+        <module name="MySpringConsoleHelloWorld" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="MySprtingConcoleHelloWorld" target="24" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="MySpringConsoleHelloWorld" options="-parameters" />
+      <module name="MySpringWebHelloWorld" options="-parameters" />
+      <module name="MySpringWebHelloWorld.main" options="-parameters" />
+      <module name="MySpringWebHelloWorld.test" options="-parameters" />
+      <module name="MySprtingConcoleHelloWorld" options="-parameters" />
+      <module name="lab-2" options="-parameters" />
+    </option>
+  </component>
+</project>

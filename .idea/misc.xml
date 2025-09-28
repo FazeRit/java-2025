@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/1/denys-hutsan/MySpringWebHelloWorld" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/1/denys-hutsan/MySprtingConcoleHelloWorld/pom.xml" />
+        <option value="$PROJECT_DIR$/1/denys-hutsan/MySpringConsoleHelloWorld/pom.xml" />
+        <option value="$PROJECT_DIR$/2/denys-hutsan/lab-2/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

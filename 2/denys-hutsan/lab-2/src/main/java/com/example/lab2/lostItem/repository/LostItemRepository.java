@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +56,20 @@ public class LostItemRepository implements AbstractRepository<LostItemEntity, UU
 
     public boolean delete(UUID id) {
         return items.removeIf(li -> li.getId().equals(id));
+    }
+
+    public void update(UUID id, LostItemEntity lostItemEntity) {
+        items.stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .ifPresent(item -> {
+                    item.setName(lostItemEntity.getName());
+                    item.setDescription(lostItemEntity.getDescription());
+                    item.setTags(lostItemEntity.getTags());
+                    item.setLocation(lostItemEntity.getLocation());
+                    item.setPhoneNumber(lostItemEntity.getPhoneNumber());
+                    item.setUpdatedAt(LocalDateTime.now());
+                });
     }
 
     public int getTotalPages(int itemsPerPage) {

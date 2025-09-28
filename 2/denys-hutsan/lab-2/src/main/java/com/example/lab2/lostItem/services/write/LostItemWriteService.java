@@ -1,6 +1,7 @@
 package com.example.lab2.lostItem.services.write;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.repository.LostItemRepository;
@@ -36,5 +37,18 @@ public class LostItemWriteService {
     public void delete(UUID id) throws LostItemNotFoundException {
         boolean deleted = repository.delete(id);
         if (!deleted) throw new LostItemNotFoundException(id);
+    }
+
+    public LostItemEntity update(UUID id, LostItemUpdateDto dto) throws LostItemNotFoundException {
+        LostItemEntity lostItemEntity = new LostItemEntity(
+                dto.getName(),
+                dto.getDescription(),
+                dto.getTags(),
+                dto.getLocation(),
+                dto.getPhoneNumber()
+        );
+
+        repository.update(id, lostItemEntity);
+        return repository.getEntityById(id).orElseThrow(() -> new LostItemNotFoundException(id));
     }
 }

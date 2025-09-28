@@ -47,9 +47,12 @@
                 tag
             </a>
         </div>
-        <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post">
+        <div class="item-actions">
+            <a th:href="@{/lost-items/{id}/edit(id=${lostItem.id})}" class="btn btn-edit">Edit Item</a>
+            <form th:action="@{/lost-items/{id}/delete(id=${lostItem.id})}" method="post" style="display: inline;">
                 <button type="submit" class="btn delete">Delete Item</button>
             </form>
+        </div>
     </div>
 </div>
 

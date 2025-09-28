@@ -1,6 +1,7 @@
 package com.example.lab2.lostItem.controllers.web.write;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LostItemWriteWebController {
     private static final String CREATE_VIEW = "lost-item-create";
+    private static final String EDIT_VIEW = "lost-item-edit";
     private final LostItemFacadeService facade;
 
     @GetMapping("/create")
@@ -43,6 +45,47 @@ public class LostItemWriteWebController {
         } catch (Exception e) {
             model.addAttribute("error", "Failed to create lost item: " + e.getMessage());
             return CREATE_VIEW;
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable UUID id, Model model) {
+        try {
+            LostItemEntity item = facade.getEntityById(id);
+            LostItemUpdateDto updateDto = new LostItemUpdateDto();
+            updateDto.setName(item.getName());
+            updateDto.setDescription(item.getDescription());
+            updateDto.setLocation(item.getLocation());
+            updateDto.setPhoneNumber(item.getPhoneNumber());
+            updateDto.setTags(item.getTags());
+
+            model.addAttribute("lostItemUpdateDto", updateDto);
+            model.addAttribute("itemId", id);
+            return EDIT_VIEW;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateLostItem(
+        @PathVariable UUID id,
+        @Valid @ModelAttribute("lostItemUpdateDto") LostItemUpdateDto lostItemUpdateDto,
+        BindingResult bindingResult,
+        Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("itemId", id);
+            return EDIT_VIEW;
+        }
+
+        try {
+            LostItemEntity updatedItem = facade.update(id, lostItemUpdateDto);
+            return "redirect:/lost-items/" + updatedItem.getId();
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to update lost item: " + e.getMessage());
+            model.addAttribute("itemId", id);
+            return EDIT_VIEW;
         }
     }
 

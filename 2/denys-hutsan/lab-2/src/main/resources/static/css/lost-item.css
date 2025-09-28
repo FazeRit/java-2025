@@ -1,5 +1,12 @@
-body { font-family: Arial, sans-serif; margin: 30px; }
-h1 { margin-bottom: 20px; text-align: center; }
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 30px; 
+}
+
+h1 { 
+    margin-bottom: 20px; 
+    text-align: center; 
+}
 
 .container {
     display: flex;
@@ -17,33 +24,52 @@ h1 { margin-bottom: 20px; text-align: center; }
     flex: 1;
 }
 
-.left .field { margin-bottom: 16px; }
-.label { font-weight: bold; display: block; margin-bottom: 4px; }
+.left .field { 
+    margin-bottom: 16px; 
+}
+
+.label { 
+    font-weight: bold; 
+    display: block; 
+    margin-bottom: 4px; 
+}
 
 .phone a {
     color: #0077cc;
     text-decoration: none;
     font-weight: bold;
 }
-.phone a:hover { text-decoration: underline; }
+
+.phone a:hover { 
+    text-decoration: underline; 
+}
 
 .tags {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 15px;
 }
+
+.tags .label {
+    margin-bottom: 8px;
+}
+
 .tags a {
     display: inline-block;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 6px 10px;
+    border-radius: 4px;
     background: #eaf3ff;
     border: 1px solid #b6d4fe;
     color: #004085;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s ease;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
+
 .tags a:hover {
     background: #d0e3ff;
     border-color: #80bdff;
@@ -56,8 +82,11 @@ h1 { margin-bottom: 20px; text-align: center; }
     gap: 15px;
     justify-content: center;
 }
+
 .btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 18px;
     background: #f2f2f2;
     border: 1px solid #ccc;
@@ -65,13 +94,73 @@ h1 { margin-bottom: 20px; text-align: center; }
     color: #333;
     text-decoration: none;
     transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 40px;
+    width: 120px;
 }
+
 .btn:hover {
     background: #e6e6e6;
 }
-.delete {
-    cursor: pointer;
+
+.item-actions {
+    display: flex;
+    gap: 10px;
     margin-top: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background: #28a745;
+    border: 1px solid #28a745;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 40px;
+    width: 120px;
+    margin-right: 10px;
+}
+
+.btn-edit:hover {
+    background: #218838;
+    border-color: #1e7e34;
+    color: white;
+    text-decoration: none;
+}
+
+.delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 40px;
+    width: 120px;
+}
+
+.delete:hover {
+    background: #c82333;
+    border-color: #bd2130;
+    color: white;
 }
 
 .btn-create {
@@ -83,4 +172,156 @@ h1 { margin-bottom: 20px; text-align: center; }
 .btn-create:hover {
     background: #0056b3;
     border-color: #0056b3;
+}
+
+/* Form styles for edit/create */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.form-input, .form-textarea {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    transition: all 0.2s ease;
+    background-color: #ffffff;
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #0077cc;
+    box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #0077cc;
+    border: 1px solid #0077cc;
+    border-radius: 6px;
+    color: white;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 120px;
+    height: 40px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+    color: white;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #333;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 120px;
+    height: 40px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #e6e6e6;
+    border-color: #999;
+    color: #333;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        margin: 15px;
+    }
+    
+    .container {
+        flex-direction: column;
+        padding: 15px;
+    }
+    
+    .back-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .item-actions {
+        justify-content: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn, .btn-edit, .delete, .btn-primary, .btn-secondary {
+        width: 100%;
+        max-width: 200px;
+    }
 }

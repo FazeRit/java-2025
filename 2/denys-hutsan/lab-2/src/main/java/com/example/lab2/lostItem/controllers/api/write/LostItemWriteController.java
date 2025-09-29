@@ -1,5 +1,6 @@
 package com.example.lab2.lostItem.controllers.api.write;
 
+import com.example.lab2.lostItem.docs.api.write.LostItemWriteApiDoc;
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
@@ -14,11 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 import java.util.UUID;
 
-// TODO: make exception handler
 @RestController
 @RequestMapping("api/lost-items")
 @AllArgsConstructor
-public class LostItemWriteController {
+public class LostItemWriteController implements LostItemWriteApiDoc {
     private final LostItemFacadeService facade;
 
     @PostMapping("/create")

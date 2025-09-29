@@ -75,8 +75,8 @@ public class LostItemReadWebController {
         model.addAttribute("currentPage", page);
         model.addAttribute("itemsPerPage", itemsPerPage);
         model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("tags", tags);
-        model.addAttribute("name", name);
+        if (tags != null) model.addAttribute("tags", tags);
+        if (name != null) model.addAttribute("name", name);
 
         return "lost-items-list";
     }

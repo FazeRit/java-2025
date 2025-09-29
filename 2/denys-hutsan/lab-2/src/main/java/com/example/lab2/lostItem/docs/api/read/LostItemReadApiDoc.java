@@ -45,7 +45,14 @@ public interface LostItemReadApiDoc {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = LostItemEntity.class))),
             @ApiResponse(responseCode = "404", description = "Річ не знайдена",
-                    content = @Content(schema = @Schema(example = "{ \"status\": 404, \"error\": \"Not Found\", \"message\": \"Item not found\" }"))),
+                    content = @Content(schema = @Schema(example = """
+                            {
+                              "timestamp": "2024-10-01T12:00:00",
+                              "status": 404,
+                              "error": "Not Found",
+                              "message": "Lost item with id {provided id} not found",
+                              "path": "/api/lost-items/{provided id}"
+                            }"""))),
             @ApiResponse(responseCode = "500", description = "Внутрішня помилка сервера", content = @Content)
     })
     ResponseEntity<LostItemEntity> getLostItemById(

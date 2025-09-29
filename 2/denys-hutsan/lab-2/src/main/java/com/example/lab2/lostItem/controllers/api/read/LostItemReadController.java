@@ -1,5 +1,6 @@
 package com.example.lab2.lostItem.controllers.api.read;
 
+import com.example.lab2.lostItem.docs.api.read.LostItemReadApiDoc;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
@@ -15,11 +16,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/lost-items")
 @AllArgsConstructor
-public class LostItemReadController {
+public class LostItemReadController implements LostItemReadApiDoc {
     private final LostItemFacadeService facade;
 
-
     @GetMapping("/")
+    @Override
     public ResponseEntity<List<LostItemEntity>> getLostItems(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int itemsPerPage
@@ -29,6 +30,7 @@ public class LostItemReadController {
     }
 
     @GetMapping("/{id}")
+    @Override
     public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable() UUID id) {
         try {
             LostItemEntity item = facade.getEntityById(id);
@@ -39,6 +41,7 @@ public class LostItemReadController {
     }
 
     @GetMapping("/search")
+    @Override
     public ResponseEntity<List<LostItemEntity>> searchLostItems(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int itemsPerPage,

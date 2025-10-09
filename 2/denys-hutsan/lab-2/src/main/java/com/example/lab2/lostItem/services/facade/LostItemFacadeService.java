@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -44,4 +45,9 @@ public class LostItemFacadeService {
     public void deleteLostItem(UUID id) throws LostItemNotFoundException {
         write.delete(id);
     }
+
+    public LostItemEntity partialUpdate(UUID id, Map<String, Object> updates) throws LostItemNotFoundException {
+        return write.partialUpdate(id, updates);
+    }
+
 }

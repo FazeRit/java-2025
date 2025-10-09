@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -51,6 +52,19 @@ public class LostItemWriteController implements LostItemWriteApiDoc {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<LostItemEntity> patchLostItem(
+            @PathVariable UUID id,
+            @RequestBody Map<String, Object> updates
+    ) {
+        try {
+            LostItemEntity updatedItem = facade.partialUpdate(id, updates);
+            return ResponseEntity.ok(updatedItem);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lost item not found");
         }
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/lost-items")
@@ -33,7 +32,7 @@ public class LostItemWriteController implements LostItemWriteApiDoc {
 
     @PutMapping("/{id}")
     public ResponseEntity<LostItemEntity> updateLostItem (
-        @PathVariable UUID id,
+        @PathVariable Integer id,
         @Valid @RequestBody LostItemUpdateDto lostItem
     ) {
         try {
@@ -45,7 +44,7 @@ public class LostItemWriteController implements LostItemWriteApiDoc {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLostItem(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteLostItem(@PathVariable Integer id) {
         try {
             facade.deleteLostItem(id);
             return ResponseEntity.noContent().build();

@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/lost-items")
@@ -40,7 +39,7 @@ public class LostItemReadWebController {
     }
 
     @GetMapping("/{id}")
-    public String getLostItemById(@PathVariable() UUID id, Model model) {
+    public String getLostItemById(@PathVariable() Integer id, Model model) {
         try {
             model.addAttribute("lostItem", facade.getEntityById(id));
             return "lost-item";

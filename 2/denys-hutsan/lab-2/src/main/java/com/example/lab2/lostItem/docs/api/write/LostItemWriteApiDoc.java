@@ -13,8 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 public interface LostItemWriteApiDoc {
     @PostMapping("/create")
     @Operation(
@@ -64,9 +62,9 @@ public interface LostItemWriteApiDoc {
             @ApiResponse(responseCode = "500", description = "Внутрішня помилка сервера", content = @Content)
     })
     ResponseEntity<LostItemEntity> updateLostItem(
-            @Parameter(description = "UUID речі для оновлення", required = true,
+            @Parameter(description = "Integer речі для оновлення", required = true,
                     example = "123e4567-e89b-12d3-a456-426614174000")
-            @PathVariable UUID id,
+            @PathVariable Integer id,
 
             @Parameter(description = "DTO з новими даними для речі", required = true)
             @Valid @RequestBody LostItemUpdateDto lostItem
@@ -91,8 +89,8 @@ public interface LostItemWriteApiDoc {
             @ApiResponse(responseCode = "500", description = "Внутрішня помилка сервера", content = @Content)
     })
     ResponseEntity<Void> deleteLostItem(
-            @Parameter(description = "UUID речі для видалення", required = true,
+            @Parameter(description = "Integer речі для видалення", required = true,
                     example = "123e4567-e89b-12d3-a456-426614174000")
-            @PathVariable UUID id
+            @PathVariable Integer id
     );
 }

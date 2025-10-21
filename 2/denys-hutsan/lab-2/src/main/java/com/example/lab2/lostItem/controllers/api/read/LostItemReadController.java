@@ -1,6 +1,7 @@
 package com.example.lab2.lostItem.controllers.api.read;
 
 import com.example.lab2.lostItem.docs.api.read.LostItemReadApiDoc;
+import com.example.lab2.lostItem.entity.LostItem;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/lost-items")
@@ -21,19 +21,19 @@ public class LostItemReadController implements LostItemReadApiDoc {
 
     @GetMapping("/")
     @Override
-    public ResponseEntity<List<LostItemEntity>> getLostItems(
+    public ResponseEntity<List<LostItem>> getLostItems(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int itemsPerPage
     ) {
-        List<LostItemEntity> items = facade.getEntities(page, itemsPerPage);
+        List<LostItem> items = facade.getEntities(page, itemsPerPage);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<LostItemEntity> getLostItemById(@PathVariable() UUID id) {
+    public ResponseEntity<LostItem> getLostItemById(@PathVariable() Integer id) {
         try {
-            LostItemEntity item = facade.getEntityById(id);
+            LostItem item = facade.getEntityById(id);
             return ResponseEntity.ok(item);
         } catch (LostItemNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -42,13 +42,13 @@ public class LostItemReadController implements LostItemReadApiDoc {
 
     @GetMapping("/search")
     @Override
-    public ResponseEntity<List<LostItemEntity>> searchLostItems(
+    public ResponseEntity<List<LostItem>> searchLostItems(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int itemsPerPage,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> tags
     ) {
-        List<LostItemEntity> itemEntities = facade.searchLostItems(name, tags, page, itemsPerPage);
+        List<LostItem> itemEntities = facade.searchLostItems(name, tags, page, itemsPerPage);
         return ResponseEntity.ok(itemEntities);
     }
 }

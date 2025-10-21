@@ -2,6 +2,7 @@ package com.example.lab2.lostItem.services.facade;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
+import com.example.lab2.lostItem.entity.LostItem;
 import com.example.lab2.lostItem.entity.LostItemEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.read.LostItemReadService;
@@ -10,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -23,25 +23,27 @@ public class LostItemFacadeService {
         return write.create(dto);
     }
 
-    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
+    public List<LostItem> getEntities(int page, int itemsPerPage) {
         return read.getEntities(page, itemsPerPage);
     }
 
-    public LostItemEntity update(UUID id, LostItemUpdateDto dto) throws LostItemNotFoundException {
+    public LostItemEntity update(Integer id, LostItemUpdateDto dto) throws LostItemNotFoundException {
         return write.update(id, dto);
     }
 
-    public int getTotalPages(int itemsPerPage) { return  read.getTotalPages(itemsPerPage); }
+    public int getTotalPages(int itemsPerPage) {
+        return read.getTotalPages(itemsPerPage);
+    }
 
-    public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
+    public LostItem getEntityById(Integer id) throws LostItemNotFoundException {
         return read.getEntityById(id);
     }
 
-    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
-        return read.searchLostItems(name, tags,  page, itemsPerPage);
+    public List<LostItem> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+        return read.searchLostItems(name, tags, page, itemsPerPage);
     }
 
-    public void deleteLostItem(UUID id) throws LostItemNotFoundException {
+    public void deleteLostItem(Integer id) throws LostItemNotFoundException {
         write.delete(id);
     }
 }

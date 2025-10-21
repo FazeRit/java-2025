@@ -11,73 +11,72 @@
 
 <div class="form-container">
     <form
-        th:action="@{/lost-items/{id}/edit(id=${itemId})}"
-        th:object="${lostItemUpdateDto}"
-        method="post"
-        class="create-form"
+            th:action="@{'/lost-items/' + ${itemId} + '/edit'}"
+            th:object="${form}"
+            method="post"
+            class="create-form"
     >
         <div class="form-group">
             <label for="name" class="form-label">Name</label>
             <input type="text"
-                id="name"
-                th:field="*{name}"
-                class="form-input"
-                placeholder="Enter item name"
-                maxlength="100">
+                   id="name"
+                   th:field="*{name}"
+                   class="form-input"
+                   placeholder="Enter item name"
+                   maxlength="100">
             <div th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}"></div>
         </div>
 
         <div class="form-group">
             <label for="description" class="form-label">Description</label>
             <textarea id="description"
-                    th:field="*{description}"
-                    class="form-textarea"
-                    placeholder="Enter item description"
-                    rows="4"
-                    maxlength="500">
-            </textarea>
+                      th:field="*{description}"
+                      class="form-textarea"
+                      placeholder="Enter item description"
+                      rows="4"
+                      maxlength="500"></textarea>
             <div th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}"></div>
         </div>
 
         <div class="form-group">
             <label for="location" class="form-label">Location</label>
             <input type="text"
-                id="location"
-                th:field="*{location}"
-                class="form-input"
-                placeholder="Enter location where item was lost"
-                maxlength="200">
+                   id="location"
+                   th:field="*{location}"
+                   class="form-input"
+                   placeholder="Enter location where item was lost"
+                   maxlength="200">
             <div th:if="${#fields.hasErrors('location')}" class="error-message" th:errors="*{location}"></div>
         </div>
 
         <div class="form-group">
             <label for="phoneNumber" class="form-label">Phone Number</label>
             <input type="tel"
-                id="phoneNumber"
-                th:field="*{phoneNumber}"
-                class="form-input"
-                placeholder="+1234567890"
-                maxlength="15">
+                   id="phoneNumber"
+                   th:field="*{phoneNumber}"
+                   class="form-input"
+                   placeholder="+1234567890"
+                   maxlength="15">
             <div th:if="${#fields.hasErrors('phoneNumber')}" class="error-message" th:errors="*{phoneNumber}"></div>
         </div>
 
         <div class="form-group">
             <label for="tags" class="form-label">Tags</label>
             <input type="text"
-                id="tags"
-                th:field="*{tags}"
-                class="form-input"
-                placeholder="Enter tags separated by commas (e.g., wallet, black, leather)">
+                   id="tags"
+                   th:field="*{tags}"
+                   class="form-input"
+                   placeholder="wallet, black, leather">
             <div class="form-hint">Separate multiple tags with commas</div>
             <div th:if="${#fields.hasErrors('tags')}" class="error-message" th:errors="*{tags}"></div>
         </div>
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Update Lost Item</button>
-            <a th:href="@{/lost-items/{id}(id=${itemId})}" class="btn btn-secondary">Cancel</a>
+            <a th:href="@{'/lost-items/' + ${itemId}}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
-    
+
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
 </div>
 

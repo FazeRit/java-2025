@@ -1,8 +1,12 @@
 package com.example.lab2.lostItem.controllers.web.write;
 
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
+import com.example.lab2.lostItem.dto.request.LostItemCreateForm;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
+import com.example.lab2.lostItem.dto.request.LostItemUpdateForm;
+import com.example.lab2.lostItem.entity.LostItem;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,8 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/lost-items")
@@ -25,13 +27,13 @@ public class LostItemWriteWebController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("lostItemCreateDto", new LostItemCreateDto());
+        model.addAttribute("lostItemCreateDto", new LostItemCreateForm());
         return CREATE_VIEW;
     }
 
     @PostMapping("/create")
     public String createLostItem(
-        @Valid @ModelAttribute("lostItemCreateDto") LostItemCreateDto lostItemCreateDto,
+        @Valid @ModelAttribute("lostItemCreateDto") LostItemCreateForm lostItemCreateForm,
         BindingResult bindingResult,
         Model model
     ) {
@@ -40,7 +42,7 @@ public class LostItemWriteWebController {
         }
 
         try {
-            LostItemEntity createdItem = facade.create(lostItemCreateDto);
+            LostItemEntity createdItem = facade.create(lostItemCreateForm.toDto());
             return "redirect:/lost-items/" + createdItem.getId();
         } catch (Exception e) {
             model.addAttribute("error", "Failed to create lost item: " + e.getMessage());
@@ -49,30 +51,27 @@ public class LostItemWriteWebController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable UUID id, Model model) {
+    public String showEditForm(@PathVariable Integer id, Model model) {
         try {
-            LostItemEntity item = facade.getEntityById(id);
-            LostItemUpdateDto updateDto = new LostItemUpdateDto();
-            updateDto.setName(item.getName());
-            updateDto.setDescription(item.getDescription());
-            updateDto.setLocation(item.getLocation());
-            updateDto.setPhoneNumber(item.getPhoneNumber());
-            updateDto.setTags(item.getTags());
+            LostItem item = facade.getEntityById(id);
+            LostItemUpdateForm form = LostItemUpdateForm.from(item);
 
-            model.addAttribute("lostItemUpdateDto", updateDto);
+            model.addAttribute("form", form);
             model.addAttribute("itemId", id);
             return EDIT_VIEW;
-        } catch (Exception e) {
+        } catch (LostItemNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/{id}/edit")
     public String updateLostItem(
-        @PathVariable UUID id,
-        @Valid @ModelAttribute("lostItemUpdateDto") LostItemUpdateDto lostItemUpdateDto,
-        BindingResult bindingResult,
-        Model model
+            @PathVariable Integer id,
+            @Valid @ModelAttribute("form") LostItemUpdateForm form,
+            BindingResult bindingResult,
+            Model model
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("itemId", id);
@@ -80,17 +79,20 @@ public class LostItemWriteWebController {
         }
 
         try {
-            LostItemEntity updatedItem = facade.update(id, lostItemUpdateDto);
+            LostItemUpdateDto dto = form.toDto();
+            LostItemEntity updatedItem = facade.update(id, dto);
             return "redirect:/lost-items/" + updatedItem.getId();
+        } catch (LostItemNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to update lost item: " + e.getMessage());
+            model.addAttribute("error", "Не вдалося оновити: " + e.getMessage());
             model.addAttribute("itemId", id);
             return EDIT_VIEW;
         }
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteLostItem(@PathVariable UUID id) {
+    @DeleteMapping("/{id}/delete")
+    public String deleteLostItem(@PathVariable Integer id) {
         try {
             facade.deleteLostItem(id);
             return "redirect:/lost-items/";

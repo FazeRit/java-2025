@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,22 +35,10 @@ public class LostItemEntity extends AbstractEntity {
     @Schema(description = "Дата останнього оновлення запису", example = "2025-09-29T12:40:00")
     private LocalDateTime updatedAt;
 
-    public LostItemEntity(UUID id, String name, String description, List<String> tags, String location,
-                          String phoneNumber) {
-        super.setId(id);
-        this.name = name;
-        this.description = description;
-        this.tags = tags != null ? List.copyOf(tags) : null;
-        this.location = location;
-        this.phoneNumber = phoneNumber;
-        this.createdAt = createdAt != null ?  createdAt : LocalDateTime.now();
-        this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
-    }
-
     public LostItemEntity(String name, String description, List<String> tags, String location, String phoneNumber) {
         this.name = name;
         this.description = description;
-        this.tags = tags != null ? List.copyOf(tags) : null;
+        this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
         this.location = location;
         this.phoneNumber = phoneNumber;
         this.createdAt = LocalDateTime.now();

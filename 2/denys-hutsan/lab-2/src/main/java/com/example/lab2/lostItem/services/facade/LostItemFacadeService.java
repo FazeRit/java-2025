@@ -27,8 +27,8 @@ public class LostItemFacadeService {
         return read.getEntities(page, itemsPerPage);
     }
 
-    public LostItemEntity update(Integer id, LostItemUpdateDto dto) throws LostItemNotFoundException {
-        return write.update(id, dto);
+    public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws LostItemNotFoundException {
+        return write.update(id, dto, transactionFail);
     }
 
     public int getTotalPages(int itemsPerPage) {

@@ -33,10 +33,11 @@ public class LostItemWriteController implements LostItemWriteApiDoc {
     @PutMapping("/{id}")
     public ResponseEntity<LostItemEntity> updateLostItem (
         @PathVariable Integer id,
-        @Valid @RequestBody LostItemUpdateDto lostItem
+        @Valid @RequestBody LostItemUpdateDto lostItem,
+        @RequestParam(defaultValue = "false") boolean transactionFail
     ) {
         try {
-            LostItemEntity item = facade.update(id, lostItem);
+            LostItemEntity item = facade.update(id, lostItem, transactionFail);
             return ResponseEntity.ok(item);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

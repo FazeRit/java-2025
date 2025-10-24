@@ -94,7 +94,7 @@ public class LostItemWriteService {
     }
 
     @Transactional
-    public LostItemEntity update(Integer id, LostItemUpdateDto dto) throws LostItemNotFoundException {
+    public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws LostItemNotFoundException {
         if (jdbcClient.sql("SELECT 1 FROM lost_items WHERE id = :id")
                 .param("id", id)
                 .query(Integer.class)
@@ -129,6 +129,10 @@ public class LostItemWriteService {
         params.add(id);
 
         jdbcClient.sql(sql).params(params).update();
+
+        if (transactionFail) {
+            throw new LostItemNotFoundException(id);
+        }
 
         if (dto.tags() != null) {
             jdbcClient.sql("DELETE FROM lost_item_tags WHERE lost_item_id = ?")

@@ -3,6 +3,7 @@ package com.example.lab2.lostItem.controllers.api.read;
 import com.example.lab2.lostItem.docs.api.read.LostItemReadApiDoc;
 import com.example.lab2.lostItem.entity.LostItem;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.InvalidPageParamsException;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,13 @@ public class LostItemReadController implements LostItemReadApiDoc {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int itemsPerPage
     ) {
-        List<LostItem> items = facade.getEntities(page, itemsPerPage);
-        return ResponseEntity.ok(items);
+        try
+        {
+            List<LostItem> items = facade.getEntities(page, itemsPerPage);
+            return ResponseEntity.ok(items);
+        } catch (InvalidPageParamsException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -48,7 +54,12 @@ public class LostItemReadController implements LostItemReadApiDoc {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> tags
     ) {
-        List<LostItem> itemEntities = facade.searchLostItems(name, tags, page, itemsPerPage);
-        return ResponseEntity.ok(itemEntities);
+        try
+        {
+            List<LostItem> itemEntities = facade.searchLostItems(name, tags, page, itemsPerPage);
+            return ResponseEntity.ok(itemEntities);
+        } catch (InvalidPageParamsException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }

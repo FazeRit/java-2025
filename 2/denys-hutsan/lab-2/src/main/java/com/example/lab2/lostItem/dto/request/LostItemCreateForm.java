@@ -24,6 +24,13 @@ public class LostItemCreateForm {
                 .toList()
                 : List.of();
 
-        return new LostItemCreateDto(name, description, tagList, location, phoneNumber);
+        LostItemCreateDto dto = new LostItemCreateDto();
+        dto.setName(name);
+        dto.setDescription(description);
+        dto.setTags(tagList);
+        dto.setLocation(location);
+        dto.setPhoneNumber(phoneNumber);
+
+        return dto;
     }
 }

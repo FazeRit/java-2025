@@ -1,5 +1,6 @@
 package com.example.lab2.lostItem.controllers.web.read;
 
+import com.example.lab2.lostItem.exceptions.InvalidPageParamsException;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import lombok.AllArgsConstructor;
@@ -28,14 +29,19 @@ public class LostItemReadWebController {
             @RequestParam(defaultValue = "10") int itemsPerPage,
             Model model) {
 
-        var items = facade.getEntities(page,  itemsPerPage);
-        int totalPages = facade.getTotalPages(itemsPerPage);
+        try
+        {
+            var items = facade.getEntities(page, itemsPerPage);
+            int totalPages = facade.getTotalPages(itemsPerPage);
 
-        model.addAttribute("items", items);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
+            model.addAttribute("items", items);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
 
-        return "lost-items-list";
+            return "lost-items-list";
+        } catch (InvalidPageParamsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -56,27 +62,31 @@ public class LostItemReadWebController {
             @RequestParam(defaultValue = "10") int itemsPerPage,
             Model model
     ) {
+        try
+        {
+            var items = facade.searchLostItems(name, tags, page, itemsPerPage);
 
-        var items = facade.searchLostItems(name, tags, page, itemsPerPage);
+            List<String> parts = new ArrayList<>();
 
-        List<String> parts = new ArrayList<>();
+            if (name != null && !name.isBlank()) {
+                parts.add(name);
+            }
+            if (tags != null && !tags.isEmpty()) {
+                parts.addAll(tags);
+            }
 
-        if (name != null && !name.isBlank()) {
-            parts.add(name);
+            String searchQuery = String.join(", ", parts);
+
+            model.addAttribute("items", items);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("itemsPerPage", itemsPerPage);
+            model.addAttribute("searchQuery", searchQuery);
+            if (tags != null) model.addAttribute("tags", tags);
+            if (name != null) model.addAttribute("name", name);
+
+            return "lost-items-list";
+        } catch (InvalidPageParamsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        if (tags != null && !tags.isEmpty()) {
-            parts.addAll(tags);
-        }
-
-        String searchQuery = String.join(", ", parts);
-
-        model.addAttribute("items", items);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("itemsPerPage", itemsPerPage);
-        model.addAttribute("searchQuery", searchQuery);
-        if (tags != null) model.addAttribute("tags", tags);
-        if (name != null) model.addAttribute("name", name);
-
-        return "lost-items-list";
     }
 }

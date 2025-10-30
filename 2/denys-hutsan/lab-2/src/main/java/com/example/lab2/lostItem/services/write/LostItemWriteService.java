@@ -29,14 +29,14 @@ public class LostItemWriteService {
         """;
 
         Integer itemId = jdbcClient.sql(insertItemSql)
-                .param("name", dto.name())
-                .param("description", dto.description())
-                .param("phoneNumber", dto.phoneNumber())
-                .param("location", dto.location())
+                .param("name", dto.getName())
+                .param("description", dto.getDescription())
+                .param("phoneNumber", dto.getPhoneNumber())
+                .param("location", dto.getLocation())
                 .query(Integer.class)
                 .single();
 
-        if (dto.tags() != null && !dto.tags().isEmpty()) {
+        if (dto.getTags() != null && !dto.getTags().isEmpty()) {
             String upsertTagSql = """
             INSERT INTO tags (name) VALUES (:name)
             ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
@@ -49,7 +49,7 @@ public class LostItemWriteService {
             ON CONFLICT (lost_item_id, tag_id) DO NOTHING
             """;
 
-            for (String tagName : dto.tags()) {
+            for (String tagName : dto.getTags()) {
                 Integer tagId = jdbcClient.sql(upsertTagSql)
                         .param("name", tagName)
                         .query(Integer.class)
@@ -63,11 +63,11 @@ public class LostItemWriteService {
         }
 
         LostItemEntity entity = new LostItemEntity(
-                dto.name(),
-                dto.description(),
-                dto.tags() != null ? new ArrayList<>(dto.tags()) : new ArrayList<>(),
-                dto.location(),
-                dto.phoneNumber()
+                dto.getName(),
+                dto.getDescription(),
+                dto.getTags() != null ? new ArrayList<>(dto.getTags()) : new ArrayList<>(),
+                dto.getLocation(),
+                dto.getPhoneNumber()
         );
         entity.setId(itemId);
         entity.setCreatedAt(java.time.LocalDateTime.now());
@@ -94,7 +94,7 @@ public class LostItemWriteService {
     }
 
     @Transactional
-    public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws LostItemNotFoundException {
+    public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws Exception {
         if (jdbcClient.sql("SELECT 1 FROM lost_items WHERE id = :id")
                 .param("id", id)
                 .query(Integer.class)
@@ -106,21 +106,25 @@ public class LostItemWriteService {
         List<String> setParts = new ArrayList<>();
         List<Object> params = new ArrayList<>();
 
-        if (dto.name() != null) {
+        if (transactionFail) {
+            throw new Exception("Internal exception");
+        }
+
+        if (dto.getName() != null) {
             setParts.add("name = ?");
-            params.add(dto.name());
+            params.add(dto.getName());
         }
-        if (dto.description() != null) {
+        if (dto.getDescription() != null) {
             setParts.add("description = ?");
-            params.add(dto.description());
+            params.add(dto.getDescription());
         }
-        if (dto.location() != null) {
+        if (dto.getLocation() != null) {
             setParts.add("location = ?");
-            params.add(dto.location());
+            params.add(dto.getLocation());
         }
-        if (dto.phoneNumber() != null) {
+        if (dto.getPhoneNumber() != null) {
             setParts.add("phone_number = ?");
-            params.add(dto.phoneNumber());
+            params.add(dto.getPhoneNumber());
         }
 
         setParts.add("updated_at = CURRENT_TIMESTAMP");
@@ -130,16 +134,12 @@ public class LostItemWriteService {
 
         jdbcClient.sql(sql).params(params).update();
 
-        if (transactionFail) {
-            throw new LostItemNotFoundException(id);
-        }
-
-        if (dto.tags() != null) {
+        if (dto.getTags() != null) {
             jdbcClient.sql("DELETE FROM lost_item_tags WHERE lost_item_id = ?")
                     .param(id)
                     .update();
 
-            if (!dto.tags().isEmpty()) {
+            if (!dto.getTags().isEmpty()) {
                 String upsertTagSql = """
                 INSERT INTO tags (name) VALUES (?)
                 ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
@@ -151,7 +151,7 @@ public class LostItemWriteService {
                 VALUES (?, ?)
                 """;
 
-                for (String tag : dto.tags()) {
+                for (String tag : dto.getTags()) {
                     Integer tagId = jdbcClient.sql(upsertTagSql)
                             .param(tag)
                             .query(Integer.class)

@@ -36,7 +36,14 @@ public class LostItemUpdateForm {
                 .toList()
                 : List.of();
 
-        return new LostItemUpdateDto(name, description, tagList, location, phoneNumber);
+        LostItemUpdateDto dto = new LostItemUpdateDto();
+        dto.setName(name);
+        dto.setDescription(description);
+        dto.setTags(tagList);
+        dto.setLocation(location);
+        dto.setPhoneNumber(phoneNumber);
+
+        return dto;
     }
 
     public static LostItemUpdateForm from(LostItem item) {

@@ -4,6 +4,7 @@ import com.example.lab2.lostItem.docs.api.write.LostItemWriteApiDoc;
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.facade.LostItemFacadeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,13 +34,16 @@ public class LostItemWriteController implements LostItemWriteApiDoc {
     @PutMapping("/{id}")
     public ResponseEntity<LostItemEntity> updateLostItem (
         @PathVariable Integer id,
-        @Valid @RequestBody LostItemUpdateDto lostItem
+        @Valid @RequestBody LostItemUpdateDto lostItem,
+        @RequestParam(defaultValue = "false") boolean transactionFail
     ) {
         try {
-            LostItemEntity item = facade.update(id, lostItem);
+            LostItemEntity item = facade.update(id, lostItem, transactionFail);
             return ResponseEntity.ok(item);
+        } catch (LostItemNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong.");
         }
     }
 

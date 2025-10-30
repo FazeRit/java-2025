@@ -67,7 +67,11 @@ public interface LostItemWriteApiDoc {
             @PathVariable Integer id,
 
             @Parameter(description = "DTO з новими даними для речі", required = true)
-            @Valid @RequestBody LostItemUpdateDto lostItem
+            @Valid @RequestBody LostItemUpdateDto lostItem,
+
+            @Parameter(description = "Якщо true — симулює помилку транзакції для тестування (за замовчуванням false)",
+            example = "false")
+            @RequestParam(defaultValue = "false") boolean transactionFail
     );
 
     @DeleteMapping("/{id}")

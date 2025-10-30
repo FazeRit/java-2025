@@ -42,6 +42,7 @@
 package com.example.lab2.lostItem.services.read;
 
 import com.example.lab2.lostItem.entity.LostItem;
+import com.example.lab2.lostItem.exceptions.InvalidPageParamsException;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -69,7 +70,11 @@ public class LostItemReadService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<LostItem> getEntities(int page, int itemsPerPage) {
+    public List<LostItem> getEntities(int page, int itemsPerPage) throws InvalidPageParamsException {
+        if (page < 1 || itemsPerPage < 1) {
+            throw new InvalidPageParamsException();
+        }
+
         int offset = (page - 1) * itemsPerPage;
 
         String sql = """
@@ -101,7 +106,11 @@ public class LostItemReadService {
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
-    public List<LostItem> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+    public List<LostItem> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) throws InvalidPageParamsException {
+        if (page < 1 || itemsPerPage < 1) {
+            throw new InvalidPageParamsException();
+        }
+
         int offset = (page - 1) * itemsPerPage;
 
         StringBuilder sql = new StringBuilder("""

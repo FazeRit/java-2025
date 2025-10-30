@@ -4,6 +4,7 @@ import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItem;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.exceptions.InvalidPageParamsException;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
 import com.example.lab2.lostItem.services.read.LostItemReadService;
 import com.example.lab2.lostItem.services.write.LostItemWriteService;
@@ -23,12 +24,12 @@ public class LostItemFacadeService {
         return write.create(dto);
     }
 
-    public List<LostItem> getEntities(int page, int itemsPerPage) {
+    public List<LostItem> getEntities(int page, int itemsPerPage) throws InvalidPageParamsException {
         return read.getEntities(page, itemsPerPage);
     }
 
-    public LostItemEntity update(Integer id, LostItemUpdateDto dto) throws LostItemNotFoundException {
-        return write.update(id, dto);
+    public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws Exception {
+        return write.update(id, dto, transactionFail);
     }
 
     public int getTotalPages(int itemsPerPage) {
@@ -39,7 +40,7 @@ public class LostItemFacadeService {
         return read.getEntityById(id);
     }
 
-    public List<LostItem> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
+    public List<LostItem> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) throws InvalidPageParamsException {
         return read.searchLostItems(name, tags, page, itemsPerPage);
     }
 

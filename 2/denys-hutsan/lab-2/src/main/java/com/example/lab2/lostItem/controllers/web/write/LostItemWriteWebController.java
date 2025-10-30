@@ -71,7 +71,8 @@ public class LostItemWriteWebController {
             @PathVariable Integer id,
             @Valid @ModelAttribute("form") LostItemUpdateForm form,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            @RequestParam(defaultValue = "false") boolean transactionFail
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("itemId", id);
@@ -80,7 +81,7 @@ public class LostItemWriteWebController {
 
         try {
             LostItemUpdateDto dto = form.toDto();
-            LostItemEntity updatedItem = facade.update(id, dto);
+            LostItemEntity updatedItem = facade.update(id, dto, transactionFail);
             return "redirect:/lost-items/" + updatedItem.getId();
         } catch (LostItemNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

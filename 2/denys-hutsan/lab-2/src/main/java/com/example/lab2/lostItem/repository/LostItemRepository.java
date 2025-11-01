@@ -1,72 +1,25 @@
 package com.example.lab2.lostItem.repository;
 
-import com.example.lab2.common.interfaces.AbstractRepository;
 import com.example.lab2.lostItem.entity.LostItemEntity;
-import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-// TODO: make abstract repository class
 @Repository
-@AllArgsConstructor
-public class LostItemRepository implements AbstractRepository<LostItemEntity, Integer> {
-    private final List<LostItemEntity> items;
+public interface LostItemRepository extends JpaRepository<LostItemEntity, Integer>, JpaSpecificationExecutor<LostItemEntity> {
 
-    public void create(LostItemEntity lostItemEntity) {
-        System.out.println(items);
-        items.add(lostItemEntity);
-        System.out.println(items);
-    }
+    @Query("SELECT li FROM LostItemEntity li WHERE LOWER(li.name) LIKE LOWER(CONCAT('%', :namePart, '%'))")
+    List<LostItemEntity> findByNameContaining(@Param("namePart") String namePart);
 
-    @Override
-    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
 
-        int fromIndex = (page - 1) * itemsPerPage;
+    List<LostItemEntity> findAllByLocation(@Param("location") String location);
 
-        if (fromIndex >= items.size()) {
-            return new ArrayList<>();
-        }
 
-        int toIndex = Math.min(fromIndex + itemsPerPage, items.size());
+    LostItemEntity findByPhoneNumber(String phoneNumber);
 
-        return items.subList(fromIndex, toIndex);
-    }
-
-    public List<LostItemEntity> getAllEntities() {
-        return items;
-    }
-
-    @Override
-    public Optional<LostItemEntity> getEntityById(Integer id) {
-        return items.stream()
-                .filter(li -> li.getId().equals(id))
-                .findFirst();
-    }
-
-    public boolean delete(Integer id) {
-        return items.removeIf(li -> li.getId().equals(id));
-    }
-
-    public void update(Integer id, LostItemEntity lostItemEntity) {
-        items.stream()
-                .filter(item -> item.getId().equals(id))
-                .findFirst()
-                .ifPresent(item -> {
-                    item.setName(lostItemEntity.getName());
-                    item.setDescription(lostItemEntity.getDescription());
-                    item.setTags(lostItemEntity.getTags());
-                    item.setLocation(lostItemEntity.getLocation());
-                    item.setPhoneNumber(lostItemEntity.getPhoneNumber());
-                    item.setUpdatedAt(LocalDateTime.now());
-                });
-    }
-
-    public int getTotalPages(int itemsPerPage) {
-        return (int) Math.ceil((double) items.size() / itemsPerPage);
-    }
+    List<LostItemEntity> findByTags_NameIn(List<String> tagNames);
 }
-

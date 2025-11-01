@@ -62,4 +62,28 @@ public class LostItemReadController implements LostItemReadApiDoc {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    @GetMapping("/find/by-name")
+    public ResponseEntity<List<LostItem>> getItemsByNameQuery(@RequestParam String name) {
+        return ResponseEntity.ok(facade.getItemsByNameContaining(name));
+    }
+
+    @GetMapping("/find/by-location")
+    public ResponseEntity<List<LostItem>> getItemsByLocationQuery(@RequestParam String location) {
+        return ResponseEntity.ok(facade.getItemsByLocation(location));
+    }
+
+    @GetMapping("/find/by-phone")
+    public ResponseEntity<LostItem> getItemByPhoneQuery(@RequestParam String phone) {
+        try {
+            return ResponseEntity.ok(facade.getItemByPhoneNumber(phone));
+        } catch (LostItemNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/find/by-tags")
+    public ResponseEntity<List<LostItem>> getItemsByTagsQuery(@RequestParam List<String> tags) {
+        return ResponseEntity.ok(facade.getItemsByTagNames(tags));
+    }
 }

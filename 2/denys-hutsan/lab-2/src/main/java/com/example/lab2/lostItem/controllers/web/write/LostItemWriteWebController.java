@@ -92,7 +92,7 @@ public class LostItemWriteWebController {
         }
     }
 
-    @DeleteMapping("/{id}/delete")
+    @PostMapping("/{id}/delete")
     public String deleteLostItem(@PathVariable Integer id) {
         try {
             facade.deleteLostItem(id);

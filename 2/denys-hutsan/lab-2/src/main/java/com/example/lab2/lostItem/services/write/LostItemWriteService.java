@@ -3,208 +3,94 @@ package com.example.lab2.lostItem.services.write;
 import com.example.lab2.lostItem.dto.request.LostItemCreateDto;
 import com.example.lab2.lostItem.dto.request.LostItemUpdateDto;
 import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.entity.TagEntity;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
-import org.springframework.jdbc.core.simple.JdbcClient;
+import com.example.lab2.lostItem.repository.LostItemRepository;
+import com.example.lab2.lostItem.repository.TagRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
+@Transactional
 public class LostItemWriteService {
 
-    private final JdbcClient jdbcClient;
+    private final LostItemRepository itemRepository;
+    private final TagRepository tagRepository;
 
-    public LostItemWriteService(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
+    private Set<TagEntity> findOrCreateTags(List<String> tagNames) {
+        if (tagNames == null || tagNames.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        List<TagEntity> existingTags = tagRepository.findByNameIn(tagNames);
+        Set<String> existingTagNames = existingTags.stream()
+                .map(TagEntity::getName)
+                .collect(Collectors.toSet());
+
+        List<TagEntity> newTags = tagNames.stream()
+                .filter(name -> !existingTagNames.contains(name))
+                .map(TagEntity::new)
+                .toList();
+
+        tagRepository.saveAll(newTags);
+
+        Set<TagEntity> allTags = new HashSet<>(existingTags);
+        allTags.addAll(newTags);
+        return allTags;
     }
 
-    @Transactional
     public LostItemEntity create(LostItemCreateDto dto) {
-        String insertItemSql = """
-        INSERT INTO lost_items (name, description, phone_number, location)
-        VALUES (:name, :description, :phoneNumber, :location)
-        RETURNING id
-        """;
+        Set<TagEntity> tags = findOrCreateTags(dto.getTags());
 
-        Integer itemId = jdbcClient.sql(insertItemSql)
-                .param("name", dto.getName())
-                .param("description", dto.getDescription())
-                .param("phoneNumber", dto.getPhoneNumber())
-                .param("location", dto.getLocation())
-                .query(Integer.class)
-                .single();
+        LostItemEntity entity = new LostItemEntity();
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setLocation(dto.getLocation());
+        entity.setPhoneNumber(dto.getPhoneNumber());
+        entity.setTags(tags);
 
-        if (dto.getTags() != null && !dto.getTags().isEmpty()) {
-            String upsertTagSql = """
-            INSERT INTO tags (name) VALUES (:name)
-            ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
-            RETURNING id
-            """;
-
-            String insertLinkSql = """
-            INSERT INTO lost_item_tags (lost_item_id, tag_id)
-            VALUES (:itemId, :tagId)
-            ON CONFLICT (lost_item_id, tag_id) DO NOTHING
-            """;
-
-            for (String tagName : dto.getTags()) {
-                Integer tagId = jdbcClient.sql(upsertTagSql)
-                        .param("name", tagName)
-                        .query(Integer.class)
-                        .single();
-
-                jdbcClient.sql(insertLinkSql)
-                        .param("itemId", itemId)
-                        .param("tagId", tagId)
-                        .update();
-            }
-        }
-
-        LostItemEntity entity = new LostItemEntity(
-                dto.getName(),
-                dto.getDescription(),
-                dto.getTags() != null ? new ArrayList<>(dto.getTags()) : new ArrayList<>(),
-                dto.getLocation(),
-                dto.getPhoneNumber()
-        );
-        entity.setId(itemId);
-        entity.setCreatedAt(java.time.LocalDateTime.now());
-        entity.setUpdatedAt(java.time.LocalDateTime.now());
-
-        return entity;
+        return itemRepository.save(entity);
     }
 
-    @Transactional
     public void delete(Integer id) throws LostItemNotFoundException {
-        boolean exists = jdbcClient.sql("SELECT 1 FROM lost_items WHERE id = :id")
-                .param("id", id)
-                .query(Integer.class)
-                .optional()
-                .isPresent();
-
-        if (!exists) {
+        if (!itemRepository.existsById(id)) {
             throw new LostItemNotFoundException(id);
         }
-
-        jdbcClient.sql("DELETE FROM lost_items WHERE id = :id")
-                .param("id", id)
-                .update();
+        itemRepository.deleteById(id);
     }
 
-    @Transactional
     public LostItemEntity update(Integer id, LostItemUpdateDto dto, boolean transactionFail) throws Exception {
-        if (jdbcClient.sql("SELECT 1 FROM lost_items WHERE id = :id")
-                .param("id", id)
-                .query(Integer.class)
-                .optional()
-                .isEmpty()) {
-            throw new LostItemNotFoundException(id);
-        }
-
-        List<String> setParts = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
-
         if (transactionFail) {
-            throw new Exception("Internal exception");
+            throw new Exception("Internal exception simulation");
         }
+
+        LostItemEntity entity = itemRepository.findById(id)
+                .orElseThrow(() -> new LostItemNotFoundException(id));
 
         if (dto.getName() != null) {
-            setParts.add("name = ?");
-            params.add(dto.getName());
+            entity.setName(dto.getName());
         }
         if (dto.getDescription() != null) {
-            setParts.add("description = ?");
-            params.add(dto.getDescription());
+            entity.setDescription(dto.getDescription());
         }
         if (dto.getLocation() != null) {
-            setParts.add("location = ?");
-            params.add(dto.getLocation());
+            entity.setLocation(dto.getLocation());
         }
         if (dto.getPhoneNumber() != null) {
-            setParts.add("phone_number = ?");
-            params.add(dto.getPhoneNumber());
+            entity.setPhoneNumber(dto.getPhoneNumber());
         }
-
-        setParts.add("updated_at = CURRENT_TIMESTAMP");
-
-        String sql = "UPDATE lost_items SET " + String.join(", ", setParts) + " WHERE id = ?";
-        params.add(id);
-
-        jdbcClient.sql(sql).params(params).update();
 
         if (dto.getTags() != null) {
-            jdbcClient.sql("DELETE FROM lost_item_tags WHERE lost_item_id = ?")
-                    .param(id)
-                    .update();
-
-            if (!dto.getTags().isEmpty()) {
-                String upsertTagSql = """
-                INSERT INTO tags (name) VALUES (?)
-                ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
-                RETURNING id
-                """;
-
-                String linkSql = """
-                INSERT INTO lost_item_tags (lost_item_id, tag_id)
-                VALUES (?, ?)
-                """;
-
-                for (String tag : dto.getTags()) {
-                    Integer tagId = jdbcClient.sql(upsertTagSql)
-                            .param(tag)
-                            .query(Integer.class)
-                            .single();
-
-                    jdbcClient.sql(linkSql)
-                            .param(id)
-                            .param(tagId)
-                            .update();
-                }
-            }
+            entity.setTags(findOrCreateTags(dto.getTags()));
         }
 
-        return getEntityById(id);
-    }
-
-    private LostItemEntity getEntityById(Integer id) {
-        String sql = """
-            SELECT li.id, li.name, li.description, li.phone_number,
-                   li.created_at, li.updated_at, li.location
-            FROM lost_items li
-            WHERE li.id = :id
-            """;
-
-        LostItemEntity item = jdbcClient.sql(sql)
-                .param("id", id)
-                .query((rs, rowNum) -> {
-                    LostItemEntity entity = new LostItemEntity(
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            new ArrayList<>(), // теги додамо нижче
-                            rs.getString("location"),
-                            rs.getString("phone_number")
-                    );
-                    entity.setId(rs.getInt("id"));
-                    entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                    entity.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-                    return entity;
-                })
-                .single();
-
-        List<String> tags = jdbcClient.sql("""
-            SELECT t.name
-            FROM tags t
-            JOIN lost_item_tags lit ON t.id = lit.tag_id
-            WHERE lit.lost_item_id = :id
-            """)
-                .param("id", id)
-                .query(String.class)
-                .list();
-        System.out.println("Found {"+tags.size()+"} tags for item {"+id+"}");
-
-        item.getTags().addAll(tags);
-        return item;
+        return itemRepository.save(entity);
     }
 }

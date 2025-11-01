@@ -47,4 +47,20 @@ public class LostItemFacadeService {
     public void deleteLostItem(Integer id) throws LostItemNotFoundException {
         write.delete(id);
     }
+
+    public List<LostItem> getItemsByNameContaining(String namePart) {
+        return read.getItemsByNameContaining(namePart);
+    }
+
+    public List<LostItem> getItemsByLocation(String location) {
+        return read.getItemsByLocation(location);
+    }
+
+    public LostItem getItemByPhoneNumber(String phoneNumber) throws LostItemNotFoundException {
+        return read.getItemByPhoneNumber(phoneNumber);
+    }
+
+    public List<LostItem> getItemsByTagNames(List<String> tagNames) {
+        return read.getItemsByTagNames(tagNames);
+    }
 }

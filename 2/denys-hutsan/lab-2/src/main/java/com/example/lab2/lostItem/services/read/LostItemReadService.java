@@ -1,73 +1,43 @@
-//package com.example.lab2.lostItem.services.read;
-//
-//import com.example.lab2.lostItem.entity.LostItemEntity;
-//import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
-//import com.example.lab2.lostItem.repository.LostItemRepository;
-//import lombok.AllArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//import java.util.UUID;
-//
-//@Service
-//@AllArgsConstructor
-//public class LostItemReadService {
-//    private final LostItemRepository repository;
-//
-//    public List<LostItemEntity> getEntities(int page, int itemsPerPage) {
-//        return repository.getEntities(page, itemsPerPage);
-//    }
-//
-//    public LostItemEntity getEntityById(UUID id) throws LostItemNotFoundException {
-//        return repository.getEntityById(id)
-//                .orElseThrow(() -> new LostItemNotFoundException(id));
-//    }
-//
-//    public List<LostItemEntity> searchLostItems(String name, List<String> tags, int page, int itemsPerPage) {
-//        List<LostItemEntity> filteredItems = repository.getAllEntities().stream()
-//                .filter(item -> (name == null || item.getName().toLowerCase().contains(name.toLowerCase())) &&
-//                        (tags == null || tags.isEmpty() || item.getTags() != null && item.getTags().stream().anyMatch(tags::contains)))
-//                .toList();
-//
-//        int toIndex = Math.min((page - 1) * itemsPerPage + itemsPerPage, filteredItems.size());
-//
-//        return filteredItems.subList(0, toIndex);
-//    }
-//
-//    public int getTotalPages(int itemsPerPage) {
-//        return repository.getTotalPages(itemsPerPage);
-//    }
-//}
-
 package com.example.lab2.lostItem.services.read;
 
 import com.example.lab2.lostItem.entity.LostItem;
+import com.example.lab2.lostItem.entity.LostItemEntity;
+import com.example.lab2.lostItem.entity.TagEntity;
 import com.example.lab2.lostItem.exceptions.InvalidPageParamsException;
 import com.example.lab2.lostItem.exceptions.LostItemNotFoundException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.example.lab2.lostItem.repository.LostItemRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class LostItemReadService {
 
-    private static final RowMapper<LostItem> LOST_ITEM_ROW_MAPPER = (rs, rowNum) -> new LostItem(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("description"),
-            rs.getString("phone_number"),
-            rs.getTimestamp("created_at").toLocalDateTime(),
-            rs.getTimestamp("updated_at").toLocalDateTime(),
-            rs.getString("location"),
-            null
-    );
-    private final JdbcTemplate jdbcTemplate;
+    private final LostItemRepository repository;
 
-    public LostItemReadService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private LostItem toLostItemDto(LostItemEntity entity) {
+        return new LostItem(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getPhoneNumber(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt(),
+                entity.getLocation(),
+                entity.getTagNames()
+        );
     }
 
     public List<LostItem> getEntities(int page, int itemsPerPage) throws InvalidPageParamsException {
@@ -75,34 +45,18 @@ public class LostItemReadService {
             throw new InvalidPageParamsException();
         }
 
-        int offset = (page - 1) * itemsPerPage;
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.by("createdAt").descending());
 
-        String sql = """
-                SELECT li.id, li.name, li.description, li.phone_number,
-                       li.created_at, li.updated_at, li.location
-                FROM lost_items li
-                ORDER BY li.created_at DESC
-                LIMIT ? OFFSET ?
-                """;
+        Page<LostItemEntity> entityPage = repository.findAll(pageable);
 
-        List<LostItem> items = jdbcTemplate.query(sql, LOST_ITEM_ROW_MAPPER, itemsPerPage, offset);
-        return items.stream()
-                .map(this::attachTags)
+        return entityPage.getContent().stream()
+                .map(this::toLostItemDto)
                 .toList();
     }
 
     public LostItem getEntityById(Integer id) throws LostItemNotFoundException {
-        String sql = """
-                SELECT li.id, li.name, li.description, li.phone_number,
-                       li.created_at, li.updated_at, li.location
-                FROM lost_items li
-                WHERE li.id = ?
-                """;
-
-        List<LostItem> result = jdbcTemplate.query(sql, LOST_ITEM_ROW_MAPPER, id);
-        return result.stream()
-                .findFirst()
-                .map(this::attachTags)
+        return repository.findById(id)
+                .map(this::toLostItemDto)
                 .orElseThrow(() -> new LostItemNotFoundException(id));
     }
 
@@ -111,65 +65,65 @@ public class LostItemReadService {
             throw new InvalidPageParamsException();
         }
 
-        int offset = (page - 1) * itemsPerPage;
+        Specification<LostItemEntity> spec = createSearchSpecification(name, tags);
 
-        StringBuilder sql = new StringBuilder("""
-        SELECT DISTINCT li.id, li.name, li.description, li.phone_number,
-                        li.created_at, li.updated_at, li.location
-        FROM lost_items li
-        LEFT JOIN lost_item_tags lit ON li.id = lit.lost_item_id::INTEGER
-        LEFT JOIN tags t ON lit.tag_id = t.id
-        WHERE 1=1
-        """);
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.by("createdAt").descending());
 
-        List<Object> params = new ArrayList<>();
+        Page<LostItemEntity> entityPage = repository.findAll(spec, pageable);
 
-        if (name != null && !name.isBlank()) {
-            sql.append(" AND LOWER(li.name) LIKE LOWER(?)");
-            params.add("%" + name + "%");
-        }
-
-        if (tags != null && !tags.isEmpty()) {
-            sql.append(" AND t.name IN (")
-                    .append(String.join(",", tags.stream().map(t -> "?").toList()))
-                    .append(")");
-            params.addAll(tags);
-        }
-
-        sql.append(" ORDER BY li.created_at DESC LIMIT ? OFFSET ?");
-        params.add(itemsPerPage);
-        params.add(offset);
-
-        List<LostItem> items = jdbcTemplate.query(sql.toString(), LOST_ITEM_ROW_MAPPER, params.toArray());
-        return items.stream()
-                .map(this::attachTags)
+        return entityPage.getContent().stream()
+                .map(this::toLostItemDto)
                 .toList();
     }
 
-    public int getTotalPages(int itemsPerPage) {
-        String sql = "SELECT COUNT(*) FROM lost_items";
-        Integer total = jdbcTemplate.queryForObject(sql, Integer.class);
-        return (total == 0) ? 0 : (int) Math.ceil((double) total / itemsPerPage);
+    private Specification<LostItemEntity> createSearchSpecification(String name, List<String> tags) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (name != null && !name.isBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+            }
+
+            if (tags != null && !tags.isEmpty()) {
+                Join<LostItemEntity, TagEntity> tagJoin = root.join("tags");
+                predicates.add(tagJoin.get("name").in(tags));
+            }
+
+            query.distinct(true);
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
-    private LostItem attachTags(LostItem item) {
-        String tagSql = """
-                SELECT t.name
-                FROM tags t
-                JOIN lost_item_tags lit ON t.id = lit.tag_id
-                WHERE lit.lost_item_id = ?
-                """;
+    public int getTotalPages(int itemsPerPage) {
+        long totalItems = repository.count();
+        if (itemsPerPage <= 0) return 0;
+        return (int) Math.ceil((double) totalItems / itemsPerPage);
+    }
 
-        List<String> tagNames = jdbcTemplate.queryForList(tagSql, String.class, item.id());
-        return new LostItem(
-                item.id(),
-                item.name(),
-                item.description(),
-                item.phoneNumber(),
-                item.createdAt(),
-                item.updatedAt(),
-                item.location(),
-                tagNames
-        );
+    public List<LostItem> getItemsByNameContaining(String namePart) {
+        return repository.findByNameContaining(namePart).stream()
+                .map(this::toLostItemDto)
+                .toList();
+    }
+
+    public List<LostItem> getItemsByLocation(String location) {
+        return repository.findAllByLocation(location).stream()
+                .map(this::toLostItemDto)
+                .toList();
+    }
+
+    public LostItem getItemByPhoneNumber(String phoneNumber) throws LostItemNotFoundException {
+        LostItemEntity entity = repository.findByPhoneNumber(phoneNumber);
+        if (entity == null) {
+            throw new LostItemNotFoundException("No item found with phone number: " + phoneNumber);
+        }
+        return toLostItemDto(entity);
+    }
+
+    public List<LostItem> getItemsByTagNames(List<String> tagNames) {
+        return repository.findByTags_NameIn(tagNames).stream()
+                .map(this::toLostItemDto)
+                .toList();
     }
 }

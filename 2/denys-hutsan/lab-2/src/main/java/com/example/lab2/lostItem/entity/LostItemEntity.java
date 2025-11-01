@@ -1,47 +1,79 @@
 package com.example.lab2.lostItem.entity;
 
 import com.example.lab2.common.entity.AbstractEntity;
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Schema(description = "Сутність втраченого предмета")
+@NoArgsConstructor
+@Entity
+@Table(name = "lost_items")
+@NamedQuery(
+        name = "LostItemEntity.findAllByLocation",
+        query = "SELECT li FROM LostItemEntity li WHERE li.location = :location"
+)
 public class LostItemEntity extends AbstractEntity {
 
-    @Schema(description = "Назва речі", example = "Black Wallet")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Schema(description = "Опис речі", example = "Leather wallet with several cards inside")
+    @Column(name = "description")
     private String description;
 
-    @Schema(description = "Теги для пошуку", example = "[\"wallet\", \"black\", \"leather\"]")
-    private List<String> tags;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "lost_item_tags",
+            joinColumns = @JoinColumn(name = "lost_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<TagEntity> tags = new HashSet<>();
 
-    @Schema(description = "Місце, де знайдено або втрачено річ", example = "Kyiv Central Station")
+    @Column(name = "location", nullable = false)
     private String location;
 
-    @Schema(description = "Контактний номер телефону", example = "+380931234567")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Schema(description = "Дата створення запису", example = "2025-09-29T12:34:56")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Schema(description = "Дата останнього оновлення запису", example = "2025-09-29T12:40:00")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public LostItemEntity(String name, String description, List<String> tags, String location, String phoneNumber) {
+    public LostItemEntity(String name, String description, List<String> tagNames, String location, String phoneNumber) {
         this.name = name;
         this.description = description;
-        this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
         this.location = location;
         this.phoneNumber = phoneNumber;
+        if (tagNames != null) {
+            this.tags = tagNames.stream()
+                    .map(TagEntity::new)
+                    .collect(Collectors.toSet());
+        }
+    }
+
+    @PrePersist
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public List<String> getTagNames() {
+        return tags.stream()
+                .map(TagEntity::getName)
+                .toList();
     }
 }
